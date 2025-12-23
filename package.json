@@ -10,7 +10,8 @@
     "show": "npx playwright show-report",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "check": "npm run typecheck && npm run lint"
   },
   "repository": {
     "type": "git",
