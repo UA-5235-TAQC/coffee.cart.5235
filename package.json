@@ -1,0 +1,38 @@
+{
+  "name": "coffee.cart.5235",
+  "version": "1.0.0",
+  "description": "Цей репозиторій буде використаний для створення навчального тестового середовища з метою вивчення написання автоматизованих end-to-end тестів за допомогою Playwright для сайту https://coffee-cart.app/.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "show": "npx playwright show-report",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "check": "npm run typecheck && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UA-5235-TAQC/coffee.cart.5235.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/UA-5235-TAQC/coffee.cart.5235/issues"
+  },
+  "homepage": "https://github.com/UA-5235-TAQC/coffee.cart.5235#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.2",
+    "eslint-plugin-playwright": "^2.4.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
+  }
+}
