@@ -8,6 +8,6 @@ export class GitHubPage extends BasePage {
         super(page);
     }
     async navigate(): Promise<void> {
-        await this.page.goto("/");
+        await this.page.goto("/github");
     }
 }
