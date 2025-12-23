@@ -3,7 +3,7 @@ import path from "path";
 dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 const BASE_CLIENT_URL =
-  process.env.BASE_CLIENT_URL || "https://coffee-cart.app/";
+  process.env.BASE_CLIENT_URL || "https://coffee-cart.app";
 const HEADLESS =
   process.env.HEADLESS === undefined ? false : process.env.HEADLESS === "true";
 const CI = process.env.CI ? parseInt(process.env.CI) : 1;
