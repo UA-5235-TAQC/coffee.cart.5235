@@ -4,9 +4,6 @@
   "description": "Цей репозиторій буде використаний для створення навчального тестового середовища з метою вивчення написання автоматизованих end-to-end тестів за допомогою Playwright для сайту https://coffee-cart.app/.",
   "main": "index.js",
   "scripts": {
- task-56-ingredientComponent
-    "test": "echo \"Error: no test specified\" && exit 1"
-
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
@@ -19,22 +16,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UA-5235-TAQC/coffee.cart.5235.git"
- main
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-task-56-ingredientComponent
-  "devDependencies": {
-    "@playwright/test": "^1.57.0"
-  },
-  "directories": {
-    "test": "tests"
-  },
-  "dependencies": {
-    "playwright": "^1.57.0",
-    "playwright-core": "^1.57.0"
-
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/UA-5235-TAQC/coffee.cart.5235/issues"
@@ -49,6 +34,5 @@ task-56-ingredientComponent
     "eslint-plugin-playwright": "^2.4.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1"
- main
   }
 }
