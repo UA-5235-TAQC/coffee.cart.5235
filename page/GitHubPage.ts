@@ -14,7 +14,7 @@ export class GitHubPage {
         try {
             await this.page.waitForURL('**/github.com/**', { timeout: 5000 });
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
