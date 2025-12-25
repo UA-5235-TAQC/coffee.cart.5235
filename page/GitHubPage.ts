@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 
-export class GithubPage {
+export class GitHubPage {
     private page: Page;
 
     constructor(page: Page) {
