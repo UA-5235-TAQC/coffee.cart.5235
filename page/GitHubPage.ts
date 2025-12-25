@@ -1,13 +1,21 @@
-import { Page } from "@playwright/test";
-import { BasePage } from "./BasePage";
+import { Page } from '@playwright/test';
 
-export class GitHubPage extends BasePage {
-
+export class GithubPage {
+    private page: Page;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
     }
-    async navigate(): Promise<void> {
-        await this.page.goto("/github");
+
+    /**
+     * Checks if the GitHub page is opened by verifying the URL
+     */
+    async isOpened(): Promise<boolean> {
+        try {
+            await this.page.waitForURL('**/github.com/**', { timeout: 5000 });
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }
