@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 
 export class GitHubPage {
-    private page: Page;
+    readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
