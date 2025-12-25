@@ -1,0 +1,22 @@
+{
+  "name": "coffee.cart.5235",
+  "version": "1.0.0",
+  "description": "Цей репозиторій буде використаний для створення навчального тестового середовища з метою вивчення написання автоматизованих end-to-end тестів за допомогою Playwright для сайту https://coffee-cart.app/.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "playwright-core": "^1.57.0"
+  }
+}
