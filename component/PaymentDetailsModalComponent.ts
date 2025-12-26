@@ -1,32 +1,31 @@
 import { Page, Locator } from "@playwright/test";
 
 export class PaymentDetailsModalComponent {
-    readonly page: Page;
-    readonly modalContainer: Locator;
-    readonly modalHeader: Locator;
-    readonly title: Locator;
-    readonly closeButton: Locator;
-    readonly descriptionText: Locator;
-    readonly paymentForm: Locator;
-    readonly nameInput: Locator;
-    readonly emailInput: Locator;
-    readonly promotionCheckbox: Locator;
-    readonly promotionLabel: Locator;
-    readonly submitButton: Locator;
+    protected modalContainer: Locator;
+    protected title: Locator;
+    protected closeButton: Locator;
+    protected descriptionText: Locator;
+    protected nameInput: Locator;
+    protected emailInput: Locator;
+    protected promotionCheckbox: Locator;
+    protected promotionLabel: Locator;
+    protected submitButton: Locator;
 
     constructor(page: Page) {
-        this.page = page;
-        this.modalContainer = page.locator('div.modal-content.size');
-        this.modalHeader = this.modalContainer.locator('section');
-        this.title = this.modalHeader.locator('h1', { hasText: 'Payment details' });
-        this.closeButton = this.modalHeader.locator('button.close');
-        this.descriptionText = this.modalContainer.locator('p');
-        this.paymentForm = this.modalContainer.locator('form[aria-label="Payment form"]');
-        this.nameInput = this.paymentForm.locator('input#name');
-        this.emailInput = this.paymentForm.locator('input#email');
-        this.promotionCheckbox = this.paymentForm.locator('input#promotion');
-        this.promotionLabel = this.paymentForm.locator('label#promotion-label');
-        this.submitButton = this.paymentForm.locator('button#submit-payment');
+        const modal = page.locator('div.modal-content.size');
+        const header = modal.locator('section');
+        const form = modal.locator('form[aria-label="Payment form"]');
+
+        this.modalContainer = modal;
+        this.title = header.locator('h1', { hasText: 'Payment details' });
+        this.closeButton = header.locator('button.close');
+        this.descriptionText = modal.locator('p');
+
+        this.nameInput = form.locator('input#name');
+        this.emailInput = form.locator('input#email');
+        this.promotionCheckbox = form.locator('input#promotion');
+        this.promotionLabel = form.locator('label#promotion-label');
+        this.submitButton = form.locator('button#submit-payment');
     }
 
     async isModalVisible(): Promise<boolean> {
