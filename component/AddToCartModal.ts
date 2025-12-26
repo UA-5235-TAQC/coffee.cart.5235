@@ -2,9 +2,9 @@ import { Locator, Page } from '@playwright/test';
 
 export class AddToCartModal {
     private page: Page;
-    readonly modalContainer: Locator;
-    readonly acceptButton: Locator;
-    readonly declineButton: Locator;
+    public readonly modalContainer: Locator;
+    public readonly acceptButton: Locator;
+    public readonly declineButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -17,7 +17,6 @@ export class AddToCartModal {
      * Clicks the accept button inside the modal
      */
     async accept(): Promise<void> {
-        await this.modalContainer.waitFor({ state: 'visible' }); 
         await this.acceptButton.click();
     }
 
@@ -25,7 +24,6 @@ export class AddToCartModal {
      * Clicks the decline button inside the modal
      */
     async decline(): Promise<void> {
-        await this.modalContainer.waitFor({ state: 'visible' });
         await this.declineButton.click();
     }
 }
