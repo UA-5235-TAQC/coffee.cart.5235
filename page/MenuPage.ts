@@ -71,5 +71,9 @@ export  class MenuPage extends BasePage {
         }
     }
 
+    async showPaymentModal(): Promise<void> {
+        await this.totalBtn.click();
+    }
+
     async showCheckout() { await this.totalBtn.hover(); }
 }
