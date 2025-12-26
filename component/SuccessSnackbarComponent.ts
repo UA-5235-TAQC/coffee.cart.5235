@@ -1,11 +1,9 @@
 import { Page, Locator } from "@playwright/test";
 
 export class SuccessSnackbarComponent {
-    readonly page: Page;
-    readonly snackbarContainer: Locator;
+    protected snackbarContainer: Locator;
 
     constructor(page: Page) {
-        this.page = page;
         this.snackbarContainer = page.locator('div.snackbar.success');
     }
 
