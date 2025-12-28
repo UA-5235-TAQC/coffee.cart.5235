@@ -1,14 +1,17 @@
 import { test, expect } from '@playwright/test';
 import { CartPreviewComponent } from '../component/cartPreview';
+import { MenuPage } from '../page/MenuPage';
 import env from '../config/env';
 
 test.describe('CartPreview - Smoke Tests', () => {
   let cartPreview: CartPreviewComponent;
+  let menuPage: MenuPage;
   const baseClientUrl = env.BASE_CLIENT_URL;
 
   test.beforeEach(async ({ page }) => {
     await page.goto(baseClientUrl);
-    cartPreview = new CartPreviewComponent(page);
+    menuPage = new MenuPage(page);
+    cartPreview = new CartPreviewComponent(page, menuPage);
   });
 
   test('cart preview initially hidden', async () => {
@@ -16,27 +19,28 @@ test.describe('CartPreview - Smoke Tests', () => {
   });
 
   test('cart preview is showed on hover', async () => {
-    await cartPreview.addProduct('Espresso');
-    await cartPreview.openCartPreview();
+    await menuPage.addCoffeeToCart('Espresso');
+    await menuPage.showCheckout();
     await expect(cartPreview.cartPreviewContainer).toBeVisible();
   });
 
   test('remove item from cart when quantity reaches zero', async () => {
     const itemName = 'Espresso';
 
-    await cartPreview.addProduct(itemName);
+    await menuPage.addCoffeeToCart(itemName);
     await cartPreview.decreaseItemQuantity(itemName);
 
     await expect(cartPreview.cartPreviewContainer).toBeHidden();
   });
 
   test('total updates when increasing item quantity', async () => {
-    await cartPreview.addProduct('Espresso');
-    const initialTotal = await cartPreview.getTotalAmount();
+    await menuPage.addCoffeeToCart('Espresso');
+    const initialTotal = await menuPage.getTotalBtnPrice();
 
     await cartPreview.increaseItemQuantity('Espresso');
-    const newTotal = await cartPreview.getTotalAmount();
+    const newTotal = await menuPage.getTotalBtnPrice(); 
 
     expect(newTotal).toBeCloseTo(initialTotal * 2, 1);
   });
 });
+
