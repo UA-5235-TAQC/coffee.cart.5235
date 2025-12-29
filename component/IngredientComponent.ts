@@ -1,4 +1,4 @@
-import {Locator } from '@playwright/test';
+import { Locator } from '@playwright/test';
 
 export enum Ingredient {
   Espresso = 'espresso',
