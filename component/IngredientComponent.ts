@@ -22,14 +22,14 @@ export class IngredientComponent {
   async getName(): Promise<string> {
     const text = await this.rootElement.innerText();
     return text.trim();
-    }
+  }
 
-    async isVisible(): Promise<boolean> {
+  async isVisible(): Promise<boolean> {
     return await this.rootElement.isVisible();
-    }
-    async getColor(): Promise<string> {
+  }
+  async getColor(): Promise<string> {
     return await this.rootElement.evaluate((el) => {
       return window.getComputedStyle(el).color;
     });
-    }
+  }
 }
