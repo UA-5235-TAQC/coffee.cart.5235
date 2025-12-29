@@ -13,6 +13,4 @@ test("has title", async ({baseClientUrl, menuPage, cartPage, gitHubPage}) => {
 
     await cartPage.clickGitHubLink();
     await expect(gitHubPage.instance).toHaveURL(`${baseClientUrl}/github`);
-
-    console.log(">=>=>-------------> [Item COUNT] - " + await menuPage.getItemCount())
 });
