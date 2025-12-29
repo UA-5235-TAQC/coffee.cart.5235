@@ -3,7 +3,7 @@ export function parsePrice(priceText: string): number {
     const match = priceText.match(/\$(\d+(?:\.\d+)?)/);
     
     if (!match) {
-        throw new Error(`Cannot parse total price from "${priceText}"`);
+        throw new Error(`Cannot parse price from "${priceText}"`);
     }
 
     return parseFloat(match[1]);
