@@ -16,7 +16,7 @@ export class IngredientComponent {
     this.rootElement = rootElement;
   }
   getIngredientByName(name: string): Locator {
-    return this.rootElement.locator(`text=${name}`);
+    return this.rootElement.locator(`text='${name}'`);
   }
 
   async getName(): Promise<string> {
