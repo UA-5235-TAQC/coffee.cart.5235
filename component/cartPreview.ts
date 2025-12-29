@@ -1,33 +1,39 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 import { MenuPage } from "../page/MenuPage";
 
 export class CartPreviewComponent {
-  readonly page: Page;
-  readonly menuPage: MenuPage;
-  readonly cartPreviewContainer: Locator;        
+  protected page: Page;
+  protected menuPage: MenuPage;
+  protected cartPreviewContainer: Locator;
+  protected cartItems: Locator;
 
-  constructor(page: Page,  menuPage: MenuPage) {
+  constructor(page: Page, menuPage: MenuPage) {
     this.page = page;
     this.menuPage = menuPage;
-
-    this.cartPreviewContainer = page.locator('.pay-container .cart-preview');     
+    this.cartPreviewContainer = page.locator(".pay-container .cart-preview");
+    this.cartItems = this.cartPreviewContainer.locator("li.list-item");
   }
 
-  // Returns a locator for a specific item in the cart.
+  // Returns a locator for a specific item (li) in the cart.
   getCartItem(itemName: string): Locator {
-     const escapedItemName = itemName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-     const regex = new RegExp(`^${escapedItemName}\\s*x\\s*\\d+$`);
-
-     return this.cartPreviewContainer.locator('li.list-item').filter({ hasText: regex });
+    return this.cartItems.filter({ hasText: itemName });
   }
 
   async increaseItemQuantity(itemName: string) {
-    await this.menuPage.showCheckout();
-    await this.getCartItem(itemName).locator('button:has-text("+")').click();
+    if (!(await this.cartPreviewContainer.isVisible())) {
+      await this.menuPage.showCheckout();
+    }
+    await this.getCartItem(itemName)
+      .locator(`button[aria-label="Add one ${itemName}"]`)
+      .click();
   }
-  
-  async decreaseItemQuantity(itemName: string){
-    await this.menuPage.showCheckout();
-    await this.getCartItem(itemName).locator('button:has-text("-")').click();
+
+  async decreaseItemQuantity(itemName: string) {
+    if (!(await this.cartPreviewContainer.isVisible())) {
+      await this.menuPage.showCheckout();
+    }
+    await this.getCartItem(itemName)
+      .locator(`button[aria-label="Remove one ${itemName}"]`)
+      .click();
   }
 }
