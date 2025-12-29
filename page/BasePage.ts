@@ -32,7 +32,6 @@ export abstract class BasePage {
     }
 
     public get instance(): Page {   //getter for Page object
-        if (!this.page) throw new Error("Page not initialized!");
         return this.page;
     }
 
