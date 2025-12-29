@@ -14,24 +14,32 @@ export class CartPreviewComponent {
     this.cartItems = this.cartPreviewContainer.locator("li.list-item");
   }
 
-  // Returns a locator for a specific item (li) in the cart.
-  getCartItem(itemName: string): Locator {
-    return this.cartItems.filter({ hasText: itemName });
+  get cartPreviewElement() {
+    return this.cartPreviewContainer;
   }
 
-  async increaseItemQuantity(itemName: string) {
+  private async ensureCartPreviewVisible() {
     if (!(await this.cartPreviewContainer.isVisible())) {
       await this.menuPage.showCheckout();
     }
+  }
+
+  // Returns a locator for a specific item (li) in the cart.
+  getCartItem(itemName: string): Locator {
+    return this.cartItems.filter({
+      has: this.page.locator(`span:text-is("${itemName}")`),
+    });
+  }
+
+  async increaseItemQuantity(itemName: string) {
+    await this.ensureCartPreviewVisible();
     await this.getCartItem(itemName)
       .locator(`button[aria-label="Add one ${itemName}"]`)
       .click();
   }
 
   async decreaseItemQuantity(itemName: string) {
-    if (!(await this.cartPreviewContainer.isVisible())) {
-      await this.menuPage.showCheckout();
-    }
+    await this.ensureCartPreviewVisible();
     await this.getCartItem(itemName)
       .locator(`button[aria-label="Remove one ${itemName}"]`)
       .click();

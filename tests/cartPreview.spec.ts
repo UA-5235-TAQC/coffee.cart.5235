@@ -15,20 +15,20 @@ test.describe("CartPreview - Smoke Tests", () => {
   });
 
   test("cart preview initially hidden", async () => {
-    await expect(cartPreview.cartPreviewContainer).toBeHidden();
+    await expect(cartPreview.cartPreviewElement).toBeHidden();
   });
 
   test("cart preview is showed on hover", async () => {
     await menuPage.addCoffeeToCart("Espresso");
     await menuPage.showCheckout();
-    await expect(cartPreview.cartPreviewContainer).toBeVisible();
+    await expect(cartPreview.cartPreviewElement).toBeVisible();
   });
 
   test("remove item from cart when quantity reaches zero", async () => {
     const itemName = "Espresso";
     await menuPage.addCoffeeToCart(itemName);
     await cartPreview.decreaseItemQuantity(itemName);
-    await expect(cartPreview.cartPreviewContainer).toBeHidden();
+    await expect(cartPreview.cartPreviewElement).toBeHidden();
   });
 
   test("total updates when increasing item quantity", async () => {
