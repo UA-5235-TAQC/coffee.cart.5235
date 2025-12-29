@@ -57,7 +57,7 @@ export class CartItemComponent {
         const totalPriceText = await this.totalPrice.textContent();
 
         if(!totalPriceText) {
-            throw new Error("Total price text is null");
+            throw new Error("Cart item total price text is null");
         }
 
         return parsePrice(totalPriceText);
