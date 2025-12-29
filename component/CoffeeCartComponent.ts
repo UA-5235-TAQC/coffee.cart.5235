@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CoffeeTypes } from '../data/CoffeeTypes';
+import { MenuPage } from '../page/MenuPage';
 /**
  * Represents the coffee card component on the menu page.
  */
@@ -48,38 +49,27 @@ export class CoffeeCartComponent {
     }
 
     // Opens the context menu (right-click) to trigger the Confirmation Modal. 
-    
     async rightClick(): Promise<void> {
         // Clicks on the cup body to invoke the context menu
         await this.cupClickArea.click({ button: 'right' });
     }
 
     // Retrieves the list of ingredients as an array of strings. 
-    
     async getIngredients(): Promise<string[]> {
-        // Optimized way to fetch all text contents at once
         const texts = await this.ingredients.allTextContents();
         return texts.map(t => t.trim()).filter(t => t !== '');
     }
 
-    // Checks if a specific ingredient is present (case-insensitive). 
     
     async hasIngredient(name: string): Promise<boolean> {
         const ingredients = await this.getIngredients();
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    // Finds the list item `Locator` for a coffee by name using a `Page`.
-    static findLocator(page: Page, name: CoffeeTypes): Locator {
-        return page.locator('ul > li').filter({
-            has: page.locator('h4', { hasText: new RegExp(`^${name}`) })
-        });
-    }
-
-    // Convenience factory: returns a `CoffeeCartComponent` instance for the named coffee.
-    static forName(page: Page, name: CoffeeTypes): CoffeeCartComponent {
-        const locator = CoffeeCartComponent.findLocator(page, name);
-        return new CoffeeCartComponent(locator);
-    }
+    // Factory method to create a CoffeeCartComponent by coffee name.
+    // static forName(name: CoffeeTypes): CoffeeCartComponent {
+    //     const locator = MenuPage.getCoffeeLocator(name);
+    //     return new CoffeeCartComponent(locator);
+    // }
 
 }
