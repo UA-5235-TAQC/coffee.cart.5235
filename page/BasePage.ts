@@ -28,7 +28,7 @@ export abstract class BasePage {
 
     async getItemCount(): Promise<number> {
         const text = await this.cartPageLink.textContent();
-        return StringUtils.extractNumbers(text ?? ""); // Return an empty string if there is no text
+        return StringUtils.extractNumbers(text ?? ""); // Return 0 if there is no text
     }
 
     public get instance(): Page {   //getter for Page object
