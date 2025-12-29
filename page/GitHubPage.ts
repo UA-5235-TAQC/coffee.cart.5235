@@ -12,7 +12,7 @@ export class GitHubPage {
      */
     async isOpened(): Promise<boolean> {
         try {
-            await this.page.waitForURL('**/github.com/**', { timeout: 5000 });
+            await this.page.waitForURL('**/github', { timeout: 5000 });
             return true;
         } catch {
             return false;
