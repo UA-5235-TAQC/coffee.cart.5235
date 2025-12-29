@@ -1,18 +1,17 @@
 import { Locator, Page } from "@playwright/test";
+import { StringUtils } from '../utils/stringUtils';
 
 export abstract class BasePage {
-    public page: Page;
+    protected page: Page; //page should be protected according POM principles
     protected menuPageLink: Locator;
     protected cartPageLink: Locator;
     protected gitHubPageLink: Locator;
-    protected title: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.menuPageLink = page.getByRole("link", { name: "Menu" });
-        this.cartPageLink = page.getByRole("link", { name: "Cart" });
-        this.gitHubPageLink = page.getByRole("link", { name: "GitHub" });
-        this.title = page.locator("xpath=/html/head/title");
+        this.menuPageLink = page.getByLabel("Menu page");
+        this.cartPageLink = page.getByLabel("Cart page");
+        this.gitHubPageLink = page.getByLabel("GitHub page");
     }
     async clickMenuLink () {
         await this.menuPageLink.click();
@@ -24,7 +23,16 @@ export abstract class BasePage {
         await this.gitHubPageLink.click();
     }
     async getTitleText() {
-        return await this.title.textContent();
+        return await this.page.title();
+    }
+
+    async getItemCount(): Promise<number> {
+        const text = await this.cartPageLink.textContent();
+        return StringUtils.extractNumbers(text ?? ""); // Return 0 if there is no text
+    }
+
+    public get instance(): Page {   //getter for Page object
+        return this.page;
     }
 
     abstract navigate(): Promise<void>;
