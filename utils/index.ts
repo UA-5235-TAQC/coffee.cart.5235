@@ -1,2 +1,2 @@
-export * from "./parsePrice";
-export * from "./parseQuantity";
+export { parsePrice } from "./parsePrice";
+export { parseQuantity } from "./parseQuantity";

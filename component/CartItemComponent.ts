@@ -22,27 +22,43 @@ export class CartItemComponent {
     }
 
     async getName(): Promise<string> {
-        return (await this.name.textContent()) ?? "";
-    } 
+        const name = await this.name.textContent();
+
+        if(!name) {
+            throw new Error("Cart item name text is null");
+        }
+
+        return name;
+    }
 
     async getUnitDescription(): Promise<string> {
-        return (await this.unitDescription.textContent()) ?? "";
+        const unitDescText = await this.unitDescription.textContent();
+
+        if(!unitDescText) {
+            throw new Error("Cart item unit description text is null");
+        }
+
+        return unitDescText;
     }
 
     async getUnitPrice(): Promise<number> {
-        const unitDescText = await this.getUnitDescription(); // e.g., "$10.00 x 1"
+        const unitDescText = await this.getUnitDescription();
 
         return parsePrice(unitDescText);
     }
 
     async getQuantity(): Promise<number> {
-        const unitDescText = await this.getUnitDescription(); // e.g., "$10.00 x 1"
+        const unitDescText = await this.getUnitDescription();
 
         return parseQuantity(unitDescText);
     }
 
     async getTotalPrice(): Promise<number> {
-        const totalPriceText = await this.totalPrice.textContent() ?? "";
+        const totalPriceText = await this.totalPrice.textContent();
+
+        if(!totalPriceText) {
+            throw new Error("Total price text is null");
+        }
 
         return parsePrice(totalPriceText);
     }

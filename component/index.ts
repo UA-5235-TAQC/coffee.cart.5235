@@ -1,1 +1,1 @@
-export * from "./CartItemComponent";
+export { CartItemComponent } from "./CartItemComponent";

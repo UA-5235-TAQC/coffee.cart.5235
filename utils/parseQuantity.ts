@@ -6,5 +6,5 @@ export function parseQuantity(quantityText: string): number {
         throw new Error(`Cannot parse quantity from "${quantityText}"`);
     }
 
-    return parseFloat(match[1]);
+    return parseInt(match[1], 10);
 }
