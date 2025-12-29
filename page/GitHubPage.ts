@@ -18,4 +18,11 @@ export class GitHubPage {
             return false;
         }
     }
+
+    /**
+     * Navigates directly to the GitHub page route.
+     */
+    async navigate(): Promise<void> {
+        await this.page.goto('/github');
+    }
 }
