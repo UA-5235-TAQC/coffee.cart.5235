@@ -1,6 +1,7 @@
 import { Page, Locator } from "@playwright/test";
+import {Base} from "../Base";
 
-export class PaymentDetailsModalComponent {
+export class PaymentDetailsModalComponent extends Base {
     protected modalContainer: Locator;
     protected title: Locator;
     protected closeButton: Locator;
@@ -12,14 +13,16 @@ export class PaymentDetailsModalComponent {
     protected submitButton: Locator;
 
     constructor(page: Page) {
-        const modal = page.locator('div.modal-content.size');
-        const header = modal.locator('section');
+        super(page);
+
+        const modal = this.page.locator('div.modal-content.size >> form[aria-label="Payment form"]');
+        const headerSection = modal.locator('section');
         const form = modal.locator('form[aria-label="Payment form"]');
 
         this.modalContainer = modal;
-        this.title = header.locator('h1', { hasText: 'Payment details' });
-        this.closeButton = header.locator('button.close');
-        this.descriptionText = modal.locator('p');
+        this.title = headerSection.locator('h1', { hasText: 'Payment details' });
+        this.closeButton = headerSection.locator('button.close');
+        this.descriptionText = modal.locator('p').first();
 
         this.nameInput = form.locator('input#name');
         this.emailInput = form.locator('input#email');
@@ -28,7 +31,7 @@ export class PaymentDetailsModalComponent {
         this.submitButton = form.locator('button#submit-payment');
     }
 
-    async isModalVisible(): Promise<boolean> {
+    async isVisible(): Promise<boolean> {
         return this.modalContainer.isVisible();
     }
 
