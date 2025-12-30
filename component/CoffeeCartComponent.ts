@@ -67,9 +67,9 @@ export class CoffeeCartComponent {
     }
 
     // Factory method to create a CoffeeCartComponent by coffee name.
-    // static forName(name: CoffeeTypes): CoffeeCartComponent {
-    //     const locator = MenuPage.getCoffeeLocator(name);
-    //     return new CoffeeCartComponent(locator);
-    // }
+    static forName(name: CoffeeTypes): CoffeeCartComponent {
+        const locator = MenuPage.getCoffeeLocator(name);
+        return new CoffeeCartComponent(locator);
+    }
 
 }
