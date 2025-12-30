@@ -34,4 +34,6 @@ export abstract class BasePage extends Base {
     public get instance(): Page {   //getter for Page object
         return this.page;
     }
+
+    abstract navigate(): Promise<void>;
 }
