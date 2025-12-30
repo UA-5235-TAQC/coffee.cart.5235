@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { CartPreviewComponent } from "../component/cartPreviewComponent";
+import { CartPreviewComponent } from "../component/CartPreviewComponent";
 import { MenuPage } from "../page/MenuPage";
 import env from "../config/env";
 
