@@ -9,8 +9,8 @@ export class AddToCartModal {
     constructor(page: Page) {
         this.page = page;
         this.modalContainer = page.locator('[data-cy="add-to-cart-modal"]');
-        this.acceptButton = this.modalContainer.locator('button', { hasText: 'Yes' });
-        this.declineButton = this.modalContainer.locator('button', { hasText: 'No' });
+        this.acceptButton = this.modalContainer.getByRole('button', { name: 'Yes' });
+        this.declineButton = this.modalContainer.getByRole('button', { name: 'No' });
     }
 
     /**
