@@ -33,6 +33,13 @@ export class MenuPage extends BasePage {
         await this.page.goto("/");
     }
 
+    async isVisible(): Promise<boolean> {
+        return this.page.isVisible("");
+    }
+
+    async waitForVisible(): Promise<void> { }
+    async waitForHidden(): Promise<void> { }
+
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
         return text?.trim() || (() => { throw new Error("Total button text is missing or empty"); })();
