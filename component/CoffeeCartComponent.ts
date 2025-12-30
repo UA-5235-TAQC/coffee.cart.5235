@@ -9,7 +9,7 @@ export class CoffeeCartComponent {
 
     private readonly nameHeader: Locator;
     private readonly priceLabel: Locator;
-    private readonly cupClickArea: Locator; // button area for adding coffee (it`s not a button element)
+    private readonly cupClickArea: Locator; // button area for adding coffee (it's not a button element)
     private readonly ingredients: Locator;
 
     constructor(root: Locator) {
