@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
+
 export class CartItemComponent{
     protected root: Locator;
     protected name: Locator;
