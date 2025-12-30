@@ -22,9 +22,9 @@ export class MenuPage extends BasePage {
         super(page);
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
-        this.PromoModal = new PromoModal(page);
-        this.SuccessSnackbar = new SuccessSnackbarComponent(page);
-        this.CartPreview = new CartPreviewComponent(page);
+        // this.PromoModal = new PromoModal(page);
+        // this.SuccessSnackbar = new SuccessSnackbarComponent(page);
+        // this.CartPreview = new CartPreviewComponent(page);
         this.totalBtn = page.getByLabel('Proceed to checkout');
         this.itemsList = page.locator('ul');
     }
