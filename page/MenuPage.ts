@@ -99,7 +99,7 @@ export class MenuPage extends BasePage {
         await this.totalBtn.click();
     }
 
-    async showCheckout() { await this.totalBtn.hover(); }
+    async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
     public get promoModal(): PromoModal {
         return this.PromoModal;
