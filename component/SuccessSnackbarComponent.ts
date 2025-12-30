@@ -1,5 +1,5 @@
 import { Page, Locator } from "@playwright/test";
-import {Base} from "../Base";
+import { Base } from "../Base";
 
 export class SuccessSnackbarComponent extends Base {
     protected snackbarContainer: Locator;
