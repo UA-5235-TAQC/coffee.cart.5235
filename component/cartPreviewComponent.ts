@@ -12,14 +12,16 @@ export class CartPreviewComponent extends Base {
         this.cartItems = this.cartPreviewContainer.locator("li.list-item");
     }
 
-    isVisible(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async isVisible(): Promise<boolean> {
+        return await this.cartPreviewContainer.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async waitForVisible(): Promise<void> {
+        await this.cartPreviewContainer.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async waitForHidden(): Promise<void> {
+        await this.cartPreviewContainer.waitFor({ state: 'hidden' });
     }
 
     get cartPreviewElement() {
@@ -33,13 +35,13 @@ export class CartPreviewComponent extends Base {
         });
     }
 
-    async increaseItemQuantity(itemName: string) {
+    async increaseItemQuantity(itemName: string): Promise<void> {
         await this.getCartItem(itemName)
             .locator(`button[aria-label="Add one ${itemName}"]`)
             .click();
     }
 
-    async decreaseItemQuantity(itemName: string) {
+    async decreaseItemQuantity(itemName: string): Promise<void> {
         await this.getCartItem(itemName)
             .locator(`button[aria-label="Remove one ${itemName}"]`)
             .click();

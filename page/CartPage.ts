@@ -13,7 +13,8 @@ export class CartPage extends BasePage {
         super(page);
         this.totalQuantity = this.page.getByRole("link", { name: "Cart" })
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
-        this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
+        // Improved selector - using CSS instead of XPath
+        this.cartItem = this.page.locator('ul.list li');
         this.checkoutButton = this.page.locator('[data-test="checkout"]');
     }
 
