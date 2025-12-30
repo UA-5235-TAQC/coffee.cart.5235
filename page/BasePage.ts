@@ -1,19 +1,37 @@
 import { Locator, Page } from "@playwright/test";
 import { StringUtils } from '../utils/stringUtils';
+import { Base } from '../Base';
 
-export abstract class BasePage {
-    protected page: Page; //page should be protected according POM principles
+export abstract class BasePage extends Base {
     protected menuPageLink: Locator;
     protected cartPageLink: Locator;
     protected gitHubPageLink: Locator;
 
     constructor(page: Page) {
-        this.page = page;
+        super(page);
         this.menuPageLink = page.getByLabel("Menu page");
         this.cartPageLink = page.getByLabel("Cart page");
         this.gitHubPageLink = page.getByLabel("GitHub page");
     }
-    async clickMenuLink () {
+
+    async navigate(path: string = "/"): Promise<void> {
+        await this.page.goto(path);
+    }
+
+    async isVisible(): Promise<boolean> {
+        return await this.page.isVisible('body');
+
+    }
+
+    async waitForVisible(): Promise<void> {
+        await this.page.waitForSelector('body', { state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        await this.page.waitForSelector('body', { state: 'hidden' });
+    }
+
+    async clickMenuLink() {
         await this.menuPageLink.click();
     }
     async clickCartLink() {
@@ -26,14 +44,13 @@ export abstract class BasePage {
         return await this.page.title();
     }
 
-    async getItemCount(): Promise<number> {
-        const text = await this.cartPageLink.textContent();
-        return StringUtils.extractNumbers(text ?? ""); // Return 0 if there is no text
-    }
-
-    public get instance(): Page {   //getter for Page object
+    public get instance(): Page {
+        //getter for Page object
         return this.page;
     }
 
-    abstract navigate(): Promise<void>;
+    async getItemCount(): Promise<number> {
+        const text = await this.cartPageLink.textContent();
+        return StringUtils.extractNumbers(text ?? "0");
+    }
 }
