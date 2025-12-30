@@ -1,7 +1,7 @@
 import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
 
-export class CartItemComponent{
+export class CartItemComponent {
     protected root: Locator;
     protected name: Locator;
     protected unitDescription: Locator;
@@ -23,7 +23,7 @@ export class CartItemComponent{
     async getName(): Promise<string> {
         const name = await this.name.textContent();
 
-        if(!name) {
+        if (!name) {
             throw new Error("Cart item name text is null");
         }
 
@@ -33,7 +33,7 @@ export class CartItemComponent{
     async getUnitDescription(): Promise<string> {
         const unitDescText = await this.unitDescription.textContent();
 
-        if(!unitDescText) {
+        if (!unitDescText) {
             throw new Error("Cart item unit description text is null");
         }
 
@@ -55,7 +55,7 @@ export class CartItemComponent{
     async getTotalPrice(): Promise<number> {
         const totalPriceText = await this.totalPrice.textContent();
 
-        if(!totalPriceText) {
+        if (!totalPriceText) {
             throw new Error("Cart item total price text is null");
         }
 
