@@ -1,27 +1,24 @@
-import { Locator, Page } from '@playwright/test';
-import { CoffeeTypes } from '../data/CoffeeTypes';
-import { MenuPage } from '../page/MenuPage';
+import { Locator } from '@playwright/test';
+
 /**
  * Represents the coffee card component on the menu page.
  */
 export class CoffeeCartComponent {
-    readonly root: Locator;
-
-    private readonly nameHeader: Locator;
-    private readonly priceLabel: Locator;
-    private readonly cupClickArea: Locator; // button area for adding coffee (it's not a button element)
-    private readonly ingredients: Locator;
+    private root: Locator;
+    private nameHeader: Locator;
+    private priceLabel: Locator;
+    private cupClickArea: Locator; // button area for adding coffee (it's not a button element)
+    private ingredients: Locator;
 
     constructor(root: Locator) {
         this.root = root;
 
-        this.nameHeader = root.locator('h4');
-        this.priceLabel = root.locator('h4 small');
-        
-        // Target the .cup-body as it carries the click event listener
-        this.cupClickArea = root.locator('.cup-body'); 
+        this.nameHeader = this.root.locator('h4');
+        this.priceLabel = this.root.locator('h4 small');
 
-        this.ingredients = root.locator('.ingredient');
+        // Target the .cup-body as it carries the click event listener
+        this.cupClickArea = this.root.locator('.cup-body');
+        this.ingredients = this.root.locator('.ingredient');
     }
 
     /**
@@ -80,10 +77,5 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    // Factory method to create a CoffeeCartComponent by coffee name.
-    static forName(name: CoffeeTypes): CoffeeCartComponent {
-        const locator = MenuPage.getCoffeeLocator(name);
-        return new CoffeeCartComponent(locator);
-    }
 
 }
