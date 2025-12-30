@@ -12,6 +12,9 @@ export enum Ingredient {
 }
 
 export class IngredientComponent extends BasePage {
+  navigate(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   private readonly rootElement: Locator;
 
   constructor(rootElement: Locator) {
@@ -20,13 +23,13 @@ export class IngredientComponent extends BasePage {
   }
 
   getIngredientByName(name: string): Locator {
-    return this.rootElement.locator(text="${name}");
+    return this.rootElement.locator('text="${name}"');
 }
   async getName(): Promise<string> {
     return (await this.rootElement.innerText()).trim();
   }
 
-  override async isVisible(): Promise<boolean> {
+  async isVisible(): Promise<boolean> {
     return await this.rootElement.isVisible();
   }
 
