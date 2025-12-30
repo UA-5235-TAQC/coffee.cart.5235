@@ -22,7 +22,7 @@ export class SuccessSnackbarComponent extends Base {
     }
 
     async getMessage(): Promise<string> {
-        const text = await this.snackbarContainer.textContent();
-        return text ?? "";
+        await this.waitForVisible();
+        return (await this.snackbarContainer.innerText()).trim();
     }
 }
