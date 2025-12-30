@@ -25,4 +25,11 @@ export class GitHubPage extends BasePage {
     async navigate(): Promise<void> {
         await this.page.goto('/github');
     }
+
+    async isVisible(): Promise<boolean> {
+        return this.page.isVisible("");
+    }
+
+    async waitForVisible(): Promise<void> {}
+    async waitForHidden(): Promise<void> {}
 }
