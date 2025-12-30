@@ -1,2 +1,2 @@
 export { CartItemComponent } from "./CartItemComponent";
-export { IngredientComponent } from './IngredientComponent';
+export { IngredientComponent } from "./IngredientComponent";
