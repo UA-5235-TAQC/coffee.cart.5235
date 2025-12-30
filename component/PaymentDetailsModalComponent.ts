@@ -2,7 +2,7 @@ import { Page, Locator } from "@playwright/test";
 import { Base } from "../Base";
 
 export class PaymentDetailsModalComponent extends Base {
-    protected modalContainer: Locator;
+    protected root: Locator;
     protected title: Locator;
     protected closeButton: Locator;
     protected descriptionText: Locator;
@@ -15,14 +15,13 @@ export class PaymentDetailsModalComponent extends Base {
     constructor(page: Page) {
         super(page);
 
-        const modal = this.page.locator('div.modal-content.size');
-        const headerSection = modal.locator('section');
-        const form = modal.locator('form[aria-label="Payment form"]');
+        this.root = this.page.locator("div.modal-content.size");
+        const headerSection = this.root.locator('section');
+        const form = this.root.locator('form[aria-label="Payment form"]');
 
-        this.modalContainer = modal;
         this.title = headerSection.locator('h1', { hasText: 'Payment details' });
         this.closeButton = headerSection.locator('button.close');
-        this.descriptionText = modal.locator('p').first();
+        this.descriptionText = this.root.locator('p').first();
 
         this.nameInput = form.locator('input#name');
         this.emailInput = form.locator('input#email');
@@ -32,15 +31,15 @@ export class PaymentDetailsModalComponent extends Base {
     }
 
     async isVisible(): Promise<boolean> {
-        return this.modalContainer.isVisible();
+        return this.root.isVisible();
     }
 
     async waitForVisible(): Promise<void> {
-        await this.modalContainer.waitFor({ state: 'visible' });
+        await this.root.waitFor({ state: 'visible' });
     }
 
     async waitForHidden(): Promise<void> {
-        await this.modalContainer.waitFor({ state: 'hidden' });
+        await this.root.waitFor({ state: 'hidden' });
     }
 
     async getTitle(): Promise<string | null> {
