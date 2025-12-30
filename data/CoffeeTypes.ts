@@ -1,11 +1,40 @@
-export enum CoffeeTypes {
-    Espresso = 'Espresso',
-    EspressoMacchiato = 'Espresso Macchiato',
-    Cappuccino = 'Cappuccino',
-    Mocha = 'Mocha',
-    FlatWhite = 'Flat White',
-    Americano = 'Americano',
-    CafeLatte = 'Cafe Latte',
-    EspressoConPanna = 'Espresso Con Panna',
-    CafeBreve = 'Cafe Breve'
-}
+export const CoffeeTypes = {
+    Espresso: { 
+        en: 'Espresso', 
+        zh: '特浓咖啡'
+    },
+    EspressoMacchiato: { 
+        en: 'Espresso Macchiato', 
+        zh: '浓缩玛奇朵' 
+    },
+    Cappuccino: { 
+        en: 'Cappuccino', 
+        zh: '卡布奇诺' 
+    },
+    Mocha: { 
+        en: 'Mocha', 
+        zh: '摩卡' 
+    },
+    FlatWhite: { 
+        en: 'Flat White', 
+        zh: '平白咖啡' 
+    },
+    Americano: { 
+        en: 'Americano', 
+        zh: '美式咖啡' 
+    },
+    CafeLatte: { 
+        en: 'Cafe Latte', 
+        zh: '拿铁' 
+    },
+    EspressoConPanna: { 
+        en: 'Espresso Con Panna', 
+        zh: '浓缩康宝蓝' 
+    },
+    CafeBreve: { 
+        en: 'Cafe Breve', 
+        zh: '半拿铁' 
+    }
+} as const;
+
+export type CoffeeType = typeof CoffeeTypes[keyof typeof CoffeeTypes];

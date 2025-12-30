@@ -3,30 +3,31 @@ import { BasePage } from "./BasePage";
 import { CoffeeCartComponent } from "../component/CoffeeCartComponent";
 import { AddToCartModal } from "../component/AddToCartModal";
 import { PaymentDetailsModalComponent } from "../component/PaymentDetailsModalComponent";
-import { PromoModalComponent } from "../component/PromoModalComponent";
+import { PromoModal } from "../component/PromoModalComponent";
 import { SuccessSnackbarComponent } from "../component/SuccessSnackbarComponent";
 import { CartPreviewComponent } from "../component/CartPreviewComponent";
 import { StringUtils } from "../utils/stringUtils";
-import { CoffeeTypes } from "../data/CoffeeTypes";
+import { CoffeeType, CoffeeTypes } from "../data/CoffeeTypes";
 
 export  class MenuPage extends BasePage {
-    public readonly coffee: CoffeeCartComponent;  
-    public readonly ConfirmModal: AddToCartModal;     
-    public readonly PaymentModal: PaymentDetailsModalComponent; 
-    public readonly PromoModal: PromoModalComponent; 
-    public readonly SuccessSnackbar: SuccessSnackbarComponent; 
-    public readonly CartPreview: CartPreviewComponent; 
-    public readonly totalBtn: Locator;
+    protected ConfirmModal: AddToCartModal;     
+    protected PaymentModal: PaymentDetailsModalComponent; 
+    public PromoModal: PromoModal; 
+    protected SuccessSnackbar: SuccessSnackbarComponent; 
+    protected CartPreview: CartPreviewComponent; 
+    protected totalBtn: Locator;
+    protected itemsList: Locator;
 
     constructor(page: Page) {
         super(page);
-        this.coffee = new CoffeeCartComponent(page);
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
-        this.PromoModal = new PromoModalComponent(page);
+        this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
         this.totalBtn = page.getByLabel('Proceed to checkout');
+        this.itemsList = page.getByLabel('Proceed to checkout');
+        this.itemsList = page.locator('ul');
     }
     async navigate(): Promise<void> {
         await this.page.goto("/");
@@ -34,40 +35,64 @@ export  class MenuPage extends BasePage {
 
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
-        return text?.trim() ?? "";
+        return text?.trim() || (() => { throw new Error("Total button text is missing or empty"); })();
     }
 
     async getTotalBtnPrice(): Promise<number> {
         return StringUtils.extractNumbers(await this.getTotalBtnText());
     }
 
-    getCoffeeLocator(name: CoffeeTypes): Locator {
-        return this.page.locator('ul > li').filter({
+    getCoffeeItem(name: CoffeeType): CoffeeCartComponent {
+        const itemLocator = this.itemsList.locator('li').filter({
             has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
         });
+
+        return new CoffeeCartComponent(itemLocator);
     }
     
-    async addRandomCoffeeToCart() {
-        const coffeeNames = Object.values(CoffeeTypes);
-        const randomName = coffeeNames[Math.floor(Math.random() * coffeeNames.length)];
-        const coffeeItem = this.getCoffeeLocator(randomName); 
-        await coffeeItem.click();
+async addCoffeeToCart(): Promise<void>; 
+async addCoffeeToCart(coffee: CoffeeType): Promise<void>;
+
+async addCoffeeToCart(coffee?: CoffeeType): Promise<void> { // empty parameter = random coffee
+    let coffeeType: CoffeeType;
+
+    if (coffee) {
+        coffeeType = coffee;
+    } else {
+        const allCoffees = Object.values(CoffeeTypes);
+        coffeeType = allCoffees[Math.floor(Math.random() * allCoffees.length)];
     }
 
-     async showConfirmModal() {
-        const coffeeNames = Object.values(CoffeeTypes);
-        const randomName = coffeeNames[Math.floor(Math.random() * coffeeNames.length)];
-        const coffeeItem = this.getCoffeeLocator(randomName); 
-        await coffeeItem.click({ button: 'right' });
+    const coffeeItem = this.getCoffeeItem(coffeeType); 
+    await coffeeItem.clickAdd();
+}
+
+    async showConfirmModal(): Promise<void>; 
+    async showConfirmModal(coffee: CoffeeType): Promise<void>; 
+
+    async showConfirmModal(coffee?: CoffeeType): Promise<void> { // empty parameter = random coffee 
+        let coffeeType: CoffeeType;
+        if (coffee) {
+            coffeeType = coffee;
+        } else {
+            const allCoffees = Object.values(CoffeeTypes);
+            coffeeType = allCoffees[Math.floor(Math.random() * allCoffees.length)];
+        }
+        const coffeeItem = this.getCoffeeItem(coffeeType);
+        await coffeeItem.rightClick();
     }
 
-    async showPromoModal() {
-        const coffeeNames = Object.values(CoffeeTypes);
-
-        for (let i = 0; i < 3; i++) {
-            const randomName = coffeeNames[Math.floor(Math.random() * coffeeNames.length)];
-            const coffeeItem = this.getCoffeeLocator(randomName);
-            await coffeeItem.click();
+   async showPromoModal() {
+        let attempts = 0;
+        const maxAttempts = 10;
+        while (!(await this.PromoModal.isVisible()) && attempts < maxAttempts) {
+            await this.addCoffeeToCart();
+            attempts++;
+        }
+        try {
+            await this.PromoModal.waitForVisible();
+        } catch (e) {
+           throw new Error(`Promo modal did not appear... Original error: ${(e as Error).message}`);
         }
     }
 
