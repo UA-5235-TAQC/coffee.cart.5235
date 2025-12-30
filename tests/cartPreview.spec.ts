@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { CartPreviewComponent } from "../component/cartPreview";
+import { CartPreviewComponent } from "../component/cartPreviewComponent";
 import { MenuPage } from "../page/MenuPage";
 import env from "../config/env";
 
@@ -11,7 +11,7 @@ test.describe("CartPreview - Smoke Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(baseClientUrl);
     menuPage = new MenuPage(page);
-    cartPreview = new CartPreviewComponent(page, menuPage);
+    cartPreview = new CartPreviewComponent(page);
   });
 
   test("cart preview initially hidden", async () => {
