@@ -1,11 +1,12 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { CoffeeCartComponent } from "../component/CoffeeCartComponent";
-import { AddToCartModal } from "../component/AddToCartModal";
-import { PaymentDetailsModalComponent } from "../component/PaymentDetailsModalComponent";
-import { PromoModal } from "../component/PromoModalComponent";
-import { SuccessSnackbarComponent } from "../component/SuccessSnackbarComponent";
-import { CartPreviewComponent } from "../component/CartPreviewComponent";
+import {
+    CoffeeCartComponent,
+    AddToCartModal,
+    PaymentDetailsModalComponent,
+    PromoModal,
+    SuccessSnackbarComponent, CartPreviewComponent
+} from "../component";
 import { StringUtils } from "../utils/stringUtils";
 import { CoffeeValue, CoffeeTypes } from "../data/CoffeeTypes";
 
@@ -22,9 +23,9 @@ export class MenuPage extends BasePage {
         super(page);
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
-        // this.PromoModal = new PromoModal(page);
-        // this.SuccessSnackbar = new SuccessSnackbarComponent(page);
-        // this.CartPreview = new CartPreviewComponent(page);
+        this.PromoModal = new PromoModal(page);
+        this.SuccessSnackbar = new SuccessSnackbarComponent(page);
+        this.CartPreview = new CartPreviewComponent(page);
         this.totalBtn = page.getByLabel('Proceed to checkout');
         this.itemsList = page.locator('ul');
     }

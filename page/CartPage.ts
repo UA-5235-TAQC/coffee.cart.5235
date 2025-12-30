@@ -1,6 +1,6 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { CartItem } from "../models/cart-item"
+import { CartItemComponent } from "../component";
 
 
 export class CartPage extends BasePage {
@@ -21,21 +21,12 @@ export class CartPage extends BasePage {
         await this.page.goto("/cart");
     }
 
-    async getItemsList(): Promise<CartItem[]> {
-        const itemList: CartItem[] = []
-        const count = await this.cartItem.count()
-
-        for (let i = 1; i < count; i++) {
-            const item = await this.cartItem.nth(i).textContent()
-
-            if (item) {
-                const parsedItem = this.parseCartItem(item)
-                if (parsedItem) {
-                    itemList.push(parsedItem)
-                }
-            }
+    async getItemsList(): Promise<CartItemComponent[]> {
+        const itemList: CartItemComponent[] = [];
+        const all = await this.cartItem.all();
+        for (const item of all) {
+            itemList.push(new CartItemComponent(item));
         }
-
         return itemList
     }
 
@@ -55,45 +46,29 @@ export class CartPage extends BasePage {
     }
 
     async isEmpty(): Promise<boolean> {
-        const isVisible = await this.emptyCartMessage.isVisible()
-        const quantity = await this.getTotalQuantity()
-        const status = isVisible && quantity === 0
-        return status
+        const isVisible = await this.emptyCartMessage.isVisible();
+        const quantity = await this.getTotalQuantity();
+        const status = isVisible && quantity === 0;
+        return status;
     }
 
     async openCheckout(): Promise<void> {
-        await this.checkoutButton.click()
+        await this.checkoutButton.click();
     }
 
-    async getItemByName(itemName: string): Promise<CartItem | null> {
-        const itemLocator = this.cartItem.filter({ hasText: itemName }).first()
-        const count = await itemLocator.count()
+    async getItemByName(itemName: string): Promise<CartItemComponent | null> {
+        const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
+        const count = await itemLocator.count();
 
         if (count === 0) {
-            return null
+            return null;
         }
 
-        const item = await itemLocator.textContent() ?? ''
-        const parsedItem = this.parseCartItem(item)
-
-        return parsedItem
+        const parsedItem = new CartItemComponent(itemLocator);
+        return parsedItem;
     }
 
-    private parseCartItem(item: string): CartItem | null {
-        const parts = item.split('$')
 
-        if (parts.length === 3) {
-            const cartItem: CartItem = {
-                title: parts[0].trim(),
-                price: parseFloat(parts[1].split('x')[0].trim()),
-                quantity: Number(parts[1].split('x')[1].replace(/[+-]/g, '').trim()),
-                totalPrice: parseFloat(parts[2].replace('x', '').trim())
-            }
-            return cartItem
-        }
-
-        return null
-    }
 
     async isVisible(): Promise<boolean> {
         return this.page.isVisible("");
