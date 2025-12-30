@@ -37,4 +37,7 @@ export const CoffeeTypes = {
     }
 } as const;
 
-export type CoffeeType = typeof CoffeeTypes[keyof typeof CoffeeTypes];
+type CoffeeEn = typeof CoffeeTypes[keyof typeof CoffeeTypes]['en'];
+type CoffeeZh = typeof CoffeeTypes[keyof typeof CoffeeTypes]['zh'];
+
+export type CoffeeValue = CoffeeEn | CoffeeZh;

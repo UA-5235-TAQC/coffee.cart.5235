@@ -1,5 +1,5 @@
 import { Locator, Page } from "@playwright/test";
-import { StringUtils } from '../utils/stringUtils';
+import { StringUtils } from "../utils/stringUtils";
 
 export abstract class BasePage {
     protected page: Page; //page should be protected according POM principles
@@ -14,31 +14,24 @@ export abstract class BasePage {
         this.gitHubPageLink = page.getByLabel("GitHub page");
     }
 
-    async navigate(path: string = '/'): Promise<void> {
+    async navigate(path: string = "/"): Promise<void> {
         await this.page.goto(path);
     }
 
     async isVisible(): Promise<boolean> {
-        if (!this.root) {
-            throw new Error("Cannot check visibility: 'root' locator is not defined in this class.");
-        }
-        return await this.root.isVisible();
+        return await this.page.isVisible('body');
+
     }
 
     async waitForVisible(): Promise<void> {
-        if (!this.root) {
-            throw new Error("Cannot wait for visibility: 'root' locator is not defined.");
-        }
-        await this.root.waitFor({ state: 'visible' });
+        await this.page.waitForSelector('body', { state: 'visible' });
     }
 
     async waitForHidden(): Promise<void> {
-        if (this.root) {
-            await this.root.waitFor({ state: 'hidden' });
-        }
+        await this.page.waitForSelector('body', { state: 'hidden' });
     }
 
-    async clickMenuLink () {
+    async clickMenuLink() {
         await this.menuPageLink.click();
     }
     async clickCartLink() {
@@ -49,28 +42,15 @@ export abstract class BasePage {
     }
     async getTitleText() {
         return await this.page.title();
-<<<<<<< Updated upstream
+    }
+
+    public get instance(): Page {
+        //getter for Page object
+        return this.page;
     }
 
     async getItemCount(): Promise<number> {
         const text = await this.cartPageLink.textContent();
-        return StringUtils.extractNumbers(text ?? ""); // Return 0 if there is no text
-    }
-
-    public get instance(): Page {   //getter for Page object
-        return this.page;
-=======
->>>>>>> Stashed changes
-    }
-
-    async getItemCount(): Promise<number> {
-        const text = await this.cartPageLink.textContent();
-        return StringUtils.extractNumbers(text ?? '0'); 
-    }
-
-    public get instance(): Page {   //getter for Page object
-        if (!this.page) throw new Error("Page not initialized!");
-        return this.page;
+        return StringUtils.extractNumbers(text ?? "0");
     }
 }
-
