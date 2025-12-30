@@ -5,4 +5,4 @@ export { AddToCartModal } from "./AddToCartModal";
 export { PaymentDetailsModalComponent } from "./PaymentDetailsModalComponent";
 export { PromoModal } from "./PromoModalComponent";
 export { SuccessSnackbarComponent } from "./SuccessSnackbarComponent";
-export { CartPreviewComponent } from "./CartPreviewComponent";
+export { CartPreviewComponent } from "./cartPreviewComponent";
