@@ -13,6 +13,31 @@ export abstract class BasePage {
         this.cartPageLink = page.getByLabel("Cart page");
         this.gitHubPageLink = page.getByLabel("GitHub page");
     }
+
+    async navigate(path: string = '/'): Promise<void> {
+        await this.page.goto(path);
+    }
+
+    async isVisible(): Promise<boolean> {
+        if (!this.root) {
+            throw new Error("Cannot check visibility: 'root' locator is not defined in this class.");
+        }
+        return await this.root.isVisible();
+    }
+
+    async waitForVisible(): Promise<void> {
+        if (!this.root) {
+            throw new Error("Cannot wait for visibility: 'root' locator is not defined.");
+        }
+        await this.root.waitFor({ state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        if (this.root) {
+            await this.root.waitFor({ state: 'hidden' });
+        }
+    }
+
     async clickMenuLink () {
         await this.menuPageLink.click();
     }
@@ -24,6 +49,7 @@ export abstract class BasePage {
     }
     async getTitleText() {
         return await this.page.title();
+<<<<<<< Updated upstream
     }
 
     async getItemCount(): Promise<number> {
@@ -33,7 +59,18 @@ export abstract class BasePage {
 
     public get instance(): Page {   //getter for Page object
         return this.page;
+=======
+>>>>>>> Stashed changes
     }
 
-    abstract navigate(): Promise<void>;
+    async getItemCount(): Promise<number> {
+        const text = await this.cartPageLink.textContent();
+        return StringUtils.extractNumbers(text ?? '0'); 
+    }
+
+    public get instance(): Page {   //getter for Page object
+        if (!this.page) throw new Error("Page not initialized!");
+        return this.page;
+    }
 }
+
