@@ -15,7 +15,7 @@ export class PaymentDetailsModalComponent extends Base {
     constructor(page: Page) {
         super(page);
 
-        const modal = this.page.locator('div.modal-content.size >> form[aria-label="Payment form"]');
+        const modal = this.page.locator('div.modal-content.size');
         const headerSection = modal.locator('section');
         const form = modal.locator('form[aria-label="Payment form"]');
 
