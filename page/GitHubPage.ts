@@ -1,10 +1,10 @@
 import { Page } from "@playwright/test";
+import { BasePage } from "./BasePage";
+import { TIMEOUT } from "../config/env"; 
 
-export class GitHubPage {
-    readonly page: Page;
-
+export class GitHubPage extends BasePage {
     constructor(page: Page) {
-        this.page = page;
+        super(page);
     }
 
     /**
@@ -12,7 +12,7 @@ export class GitHubPage {
      */
     async isOpened(): Promise<boolean> {
         try {
-            await this.page.waitForURL('**/github', { timeout: 5000 });
+            await this.page.waitForURL('**/github', { timeout: TIMEOUT });
             return true;
         } catch {
             return false;
