@@ -2,6 +2,7 @@ import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
 
 export class CartItemComponent {
+    protected root: Locator;
     protected name: Locator;
     protected unitDescription: Locator;
     protected totalPrice: Locator;
@@ -9,22 +10,20 @@ export class CartItemComponent {
     protected removeOneButton: Locator;
     protected deleteButton: Locator;
 
-    /**
-     * @param itemRow - Locator pointing to a single cart item row element
-     */
-    constructor(protected readonly itemRow: Locator) {
-        this.name = this.itemRow.locator("div >> nth=0"); // item name is the 1st div in the row
-        this.unitDescription = this.itemRow.locator(".unit-desc");
-        this.totalPrice = this.itemRow.locator("div >> nth=3"); // total price is the 4th div in the row
-        this.addOneButton = this.itemRow.locator("button[aria-label^=\"Add one\"]");
-        this.removeOneButton = this.itemRow.locator("button[aria-label^=\"Remove one\"]");
-        this.deleteButton = this.itemRow.locator("button.delete");
+    constructor(root: Locator) {
+        this.root = root;
+        this.name = this.root.locator("div >> nth=0"); // item name is the 1st div in the row
+        this.unitDescription = this.root.locator(".unit-desc");
+        this.totalPrice = this.root.locator("div >> nth=3"); // total price is the 4th div in the row
+        this.addOneButton = this.root.locator("button[aria-label^=\"Add one\"]");
+        this.removeOneButton = this.root.locator("button[aria-label^=\"Remove one\"]");
+        this.deleteButton = this.root.locator("button.delete");
     }
 
     async getName(): Promise<string> {
         const name = await this.name.textContent();
 
-        if(!name) {
+        if (!name) {
             throw new Error("Cart item name text is null");
         }
 
@@ -34,7 +33,7 @@ export class CartItemComponent {
     async getUnitDescription(): Promise<string> {
         const unitDescText = await this.unitDescription.textContent();
 
-        if(!unitDescText) {
+        if (!unitDescText) {
             throw new Error("Cart item unit description text is null");
         }
 
@@ -56,7 +55,7 @@ export class CartItemComponent {
     async getTotalPrice(): Promise<number> {
         const totalPriceText = await this.totalPrice.textContent();
 
-        if(!totalPriceText) {
+        if (!totalPriceText) {
             throw new Error("Cart item total price text is null");
         }
 
