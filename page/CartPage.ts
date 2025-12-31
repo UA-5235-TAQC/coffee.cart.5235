@@ -68,12 +68,17 @@ export class CartPage extends BasePage {
         return parsedItem;
     }
 
-
-
     async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
+        try {
+            await this.checkoutButton.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
     }
 
-    async waitForVisible(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.checkoutButton.waitFor({ state: 'visible' });
+    }
     async waitForHidden(): Promise<void> { }
 }
