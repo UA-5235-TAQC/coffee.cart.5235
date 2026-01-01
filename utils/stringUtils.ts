@@ -8,4 +8,9 @@ export class StringUtils {
         const result = parseFloat(match[0]);
         return isNaN(result) ? 0 : result;
     }
+
+    // Converts a name to a data-test attribute value by replacing spaces with underscores
+    static nameToDataTest(name: string): string {
+        return name.replace(/ /g, '_');
+    }
 }

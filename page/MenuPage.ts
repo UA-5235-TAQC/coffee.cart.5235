@@ -1,5 +1,5 @@
-import { Locator, Page } from "@playwright/test";
-import { BasePage } from "./BasePage";
+import {Locator, Page} from "@playwright/test";
+import {BasePage} from "./BasePage";
 import {
     CoffeeCartComponent,
     AddToCartModal,
@@ -7,8 +7,8 @@ import {
     PromoModal,
     SuccessSnackbarComponent, CartPreviewComponent
 } from "../component";
-import { StringUtils } from "../utils/stringUtils";
-import { CoffeeValue, CoffeeTypes } from "../data/CoffeeTypes";
+import {StringUtils} from "../utils/stringUtils";
+import {CoffeeValue, CoffeeTypes} from "../data";
 
 export class MenuPage extends BasePage {
     protected ConfirmModal: AddToCartModal;
@@ -16,7 +16,7 @@ export class MenuPage extends BasePage {
     protected PromoModal: PromoModal;
     protected SuccessSnackbar: SuccessSnackbarComponent;
     protected CartPreview: CartPreviewComponent;
-    protected totalBtn: Locator;
+    protected _totalBtn: Locator;
     protected itemsList: Locator;
 
     constructor(page: Page) {
@@ -26,7 +26,7 @@ export class MenuPage extends BasePage {
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this.totalBtn = page.getByLabel('Proceed to checkout');
+        this._totalBtn = page.getByRole('button', {name: 'Proceed to checkout'});
         this.itemsList = page.locator('ul');
     }
 
@@ -38,12 +38,17 @@ export class MenuPage extends BasePage {
         return this.page.isVisible("");
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+    }
+
+    async waitForHidden(): Promise<void> {
+    }
 
     async getTotalBtnText(): Promise<string> {
-        const text = await this.totalBtn.textContent();
-        return text?.trim() || (() => { throw new Error("Total button text is missing or empty"); })();
+        const text = await this._totalBtn.textContent();
+        return text?.trim() || (() => {
+            throw new Error("Total button text is missing or empty");
+        })();
     }
 
     async getTotalBtnPrice(): Promise<number> {
@@ -51,8 +56,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator(`[data-test="${dataTestValue}"]`)
         });
 
         return new CoffeeCartComponent(itemLocator);
@@ -104,12 +110,29 @@ export class MenuPage extends BasePage {
     }
 
     async showPaymentModal(): Promise<void> {
-        await this.totalBtn.click();
+        await this._totalBtn.waitFor({state: 'visible', timeout: 5000});
+        await this._totalBtn.scrollIntoViewIfNeeded();
+        await this._totalBtn.click();
+        await this.PaymentModal.waitForVisible();
     }
 
-    async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
+    async showCheckout(): Promise<void> {
+        await this._totalBtn.hover();
+    }
 
-    public get promoModal(): PromoModal {
+    get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+
+    get totalBtn(): Locator {
+        return this._totalBtn;
+    }
+
+    get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
     }
 }
