@@ -11,7 +11,7 @@ test.describe("Promo Modal: ", () => {
   test("TC-011: Checking the functionality of the Promotional Offer", async ({ menuPage }) => {
     const { promoModal } = menuPage;
 
-    // Add 3 coffees to trigger the promo modal
+    // Add 3 coffees to trigger and accept the promo modal
     // NOTE: can't use showPromoModal() method here, as we need to know what coffees are added to cart to check total later
     await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
     await menuPage.addCoffeeToCart(CoffeeTypes.Americano.en);
