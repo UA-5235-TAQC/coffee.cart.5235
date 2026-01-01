@@ -118,6 +118,10 @@ export class MenuPage extends BasePage {
         return this.PaymentModal;
     }
 
+    public get confirmModal(): AddToCartModal {
+        return this.ConfirmModal;
+    }
+
     public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
     }
