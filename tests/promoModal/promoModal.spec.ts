@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures/fixturePage";
 import { CoffeeTypes } from "../../data/CoffeeTypes";
 
-test.describe("Promo Modal: ", () => {
+test.describe("Promo Modal", () => {
   test.beforeEach(async ({ menuPage }) => {
     await menuPage.navigate();
     await expect.poll(() => menuPage.getItemCount()).toBe(0);
