@@ -38,7 +38,9 @@ export class MenuPage extends BasePage {
         return this.page.isVisible("");
     }
 
-    async waitForVisible(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.page.waitForSelector('body', { state: 'visible' });
+     }
     async waitForHidden(): Promise<void> { }
 
     async getTotalBtnText(): Promise<string> {
@@ -111,5 +113,12 @@ export class MenuPage extends BasePage {
 
     public get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+    public get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    public get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
     }
 }
