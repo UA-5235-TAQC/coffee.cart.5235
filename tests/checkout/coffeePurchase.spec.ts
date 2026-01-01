@@ -10,15 +10,15 @@ test.describe("Coffee Purchase: ", () => {
   });
 
   test("TC-001: Successful purchase of one product", async ({ menuPage }) => {
-    const espresso = menuPage.getCoffeeItem(CoffeeTypes.Espresso.en);
-    const espressoPrice = await espresso.getPrice();
-    const { paymentModal, successSnackbar } = menuPage;
-    const { name, email } = TestDataBuilder.validPaymentDetails();
+    const espressoPrice = await menuPage.getCoffeeItem(CoffeeTypes.Espresso.en).getPrice();
 
-    await espresso.clickAdd();
+    await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
 
     await expect.poll(() => menuPage.getItemCount()).toBe(1);
     await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(espressoPrice);
+
+    const { paymentModal, successSnackbar } = menuPage;
+    const { name, email } = TestDataBuilder.validPaymentDetails();
 
     await menuPage.showPaymentModal();
     await paymentModal.waitForVisible();
