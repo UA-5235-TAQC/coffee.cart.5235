@@ -1,5 +1,5 @@
 import {expect} from '@playwright/test';
-import {CoffeeTypes} from "../../data/CoffeeTypes";
+import {CoffeeTypes} from "../../data";
 import {test} from "../../fixtures/fixturePage";
 
 test.describe('TC-23: Payment Form Validation', () => {
@@ -11,7 +11,7 @@ test.describe('TC-23: Payment Form Validation', () => {
         await expect.poll(() => menuPage.getItemCount()).toBe(0);
     });
 
-    test('Validate payment form with boundary values, invalid and valid data', async ({menuPage}) => {
+    test('Validate payment form', async ({menuPage}) => {
         // Step 1: Add Espresso coffee to the cart
         await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
         const cafeEspressoPrice = await menuPage.getCoffeeItem(CoffeeTypes.Espresso.en).getPrice();

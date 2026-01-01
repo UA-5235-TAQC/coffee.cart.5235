@@ -1,6 +1,6 @@
 import {expect} from "@playwright/test";
 import {test} from "../../fixtures/fixturePage";
-import {CoffeeTypes} from "../../data/CoffeeTypes";
+import {CoffeeTypes} from "../../data";
 
 test.describe("TC-17: Translate coffee title to Chinese by double-clicking", () => {
 
