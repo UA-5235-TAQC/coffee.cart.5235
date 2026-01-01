@@ -5,46 +5,51 @@ import {CoffeeTypes} from "../../data/CoffeeTypes";
 test.describe("TC-17: Translate coffee title to Chinese by double-clicking", () => {
 
     test.beforeEach(async ({menuPage}) => {
-        // Preconditions: The cart is empty
+        // Preconditions: Open the website
         await menuPage.navigate();
-        await expect.poll(() => menuPage.getItemCount()).toBe(0);
+        // The cart is empty
+        const cartItemCount = await menuPage.getItemCount();
+        expect(cartItemCount).toBe(0);
     });
 
     test("Translate coffee title to Chinese via double-click", async ({menuPage}) => {
-        // Step 1: Open the website
-        // Already done in beforeEach
-        // Step 2: Identify any coffee item on the page (Espresso)
-        const espresso = menuPage.getCoffeeItem(CoffeeTypes.Espresso.en);
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.en);
 
-        // Step 3: Double-click on the coffee title text
+        // Step 1: Identify Espresso item on the page
+        const espressoNameEn = CoffeeTypes.Espresso.en;
+        const espressoNameZh = CoffeeTypes.Espresso.zh;
+        const espresso = menuPage.getCoffeeItem(espressoNameEn);
+        expect(await espresso.getName()).toBe(espressoNameEn);
+
+        // Step 2: Double-click on the coffee title text
         await espresso.doubleClickName();
 
-        // Step 4: Verify that the coffee title is translated to Chinese
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.zh);
+        // Step 3: Verify that the coffee title is translated to Chinese
+        expect(await espresso.getName()).toBe(espressoNameZh);
 
-        // Step 5: Double-click the same coffee title again
+        // Step 4: Double-click the same coffee title again
         await espresso.doubleClickName();
 
-        // Step 6: Verify that the coffee title is displayed in the original language
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.en);
+        // Step 5: Verify that the coffee title is displayed in the original language
+        expect(await espresso.getName()).toBe(espressoNameEn);
 
-        // Step 7: Single-click the coffee title
+        // Step 6: Single-click the coffee title
         await espresso.clickName();
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.en);
+        expect(await espresso.getName()).toBe(espressoNameEn);
 
-        // Step 8: Double-click on another coffee title (Cappuccino)
-        const cappuccino = menuPage.getCoffeeItem(CoffeeTypes.Cappuccino.en);
+        // Step 7: Double-click on Cappuccino coffee title
+        const cappuccinoNameEn = CoffeeTypes.Cappuccino.en;
+        const cappuccinoNameZh = CoffeeTypes.Cappuccino.zh;
+        const cappuccino = menuPage.getCoffeeItem(cappuccinoNameEn);
         await cappuccino.doubleClickName();
 
-        // Step 9: Verify that the coffee title is translated to Chinese
-        expect(await cappuccino.getName()).toBe(CoffeeTypes.Cappuccino.zh);
+        // Step 8: Verify that the coffee title is translated to Chinese
+        expect(await cappuccino.getName()).toBe(cappuccinoNameZh);
 
-        // Step 10: Refresh the page
+        // Step 9: Refresh the page
         await menuPage.reloadPage();
 
         // Verify titles after reload
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.en);
-        expect(await cappuccino.getName()).toBe(CoffeeTypes.Cappuccino.en);
+        expect(await espresso.getName()).toBe(espressoNameEn);
+        expect(await cappuccino.getName()).toBe(cappuccinoNameEn);
     });
 });

@@ -78,7 +78,8 @@ export class CoffeeCartComponent {
     }
 
     /**
-     * Single-click on the coffee title (does not translate)
+     * Performs a single left-click on the coffee title header element.
+     * This simulates a standard user click on the coffee name.
      */
     async clickName(): Promise<void> {
         await this.nameHeader.click();

@@ -122,6 +122,10 @@ export class MenuPage extends BasePage {
         return this.SuccessSnackbar;
     }
 
+    public totalButton(): Locator {
+        return this.totalBtn;
+    }
+
     async reloadPage(): Promise<void> {
         await this.page.reload();
     }
