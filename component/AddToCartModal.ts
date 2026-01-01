@@ -17,6 +17,7 @@ export class AddToCartModal extends Base {
      * Clicks the accept button inside the modal
      */
     async accept(): Promise<void> {
+        await this.waitForVisible(); 
         await this.acceptButton.click();
     }
 
@@ -30,8 +31,8 @@ export class AddToCartModal extends Base {
     isVisible(): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
-    waitForVisible(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async waitForVisible(): Promise<void> {
+        await this.modalContainer.waitFor({ state: 'visible' });
     }
     waitForHidden(): Promise<void> {
         throw new Error('Method not implemented.');
