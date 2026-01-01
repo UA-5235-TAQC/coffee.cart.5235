@@ -8,24 +8,19 @@ test.describe('Promo Modal – full flow', () => {
     await expect.poll(() => menuPage.getItemCount()).toBe(0);
   });
 
-  test('TC-PROMO-001: Promo modal accept, repeat, remove, skip', async ({
+  test("TC-40: Verify pop-ups message 'It's your lucky day!'", async ({
     menuPage,
     cartPage,
   }) => {
     const { promoModal } = menuPage;
 
-    /* =======================
-       Step 1–2: add 3 coffees
-       ======================= */
     await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
     await menuPage.addCoffeeToCart(CoffeeTypes.Mocha.en);
     await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
 
     await promoModal.waitForVisible();
 
-    /* =======================
-       Step 3: accept promo
-       ======================= */
+
     await promoModal.acceptPromo();
     await promoModal.waitForHidden();
 
@@ -40,25 +35,17 @@ test.describe('Promo Modal – full flow', () => {
     const expectedTotalFirst =
       espressoPrice + mochaPrice + cappuccinoPrice + promoMochaPrice;
 
-    /* =======================
-       Step 4: go to Cart
-       ======================= */
+
     await cartPage.navigate();
 
-    /* =======================
-       Step 5: verify items
-       ======================= */
+
     const items = await cartPage.getItemsList();
     expect(items.length).toBe(4);
 
-    /* =======================
-       Step 6: verify total
-       ======================= */
+
     await expect.poll(() => cartPage.getTotalPrice()).toBe(expectedTotalFirst);
     
-    /* =======================
-       Step 7: add 2 more items
-       ======================= */
+
     await menuPage.navigate();
 
     await menuPage.addCoffeeToCart(CoffeeTypes.Americano.en);
@@ -70,9 +57,7 @@ test.describe('Promo Modal – full flow', () => {
 
     await expect.poll(() => menuPage.getItemCount()).toBe(7);
 
-    /* =======================
-       Step 8: remove items < 3
-       ======================= */
+
     await cartPage.navigate();
 
     // remove items until less than 3 remain
@@ -84,9 +69,7 @@ test.describe('Promo Modal – full flow', () => {
     const finalCount = await cartPage.getTotalQuantity();
     expect(finalCount).toBeLessThan(3);
 
-    /* =======================
-       Step 9: trigger promo and skip
-       ======================= */
+
     await menuPage.navigate();
 
     await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
@@ -99,9 +82,8 @@ test.describe('Promo Modal – full flow', () => {
 
     await expect.poll(() => menuPage.getItemCount()).toBe(3);
 
-    /* =======================
-       Postconditions
-       ======================= */
+
+       // Postconditions
     await cartPage.navigate();
     while ((await cartPage.getItemsList()).length >= 0) {
       const firstItem = (await cartPage.getItemsList())[0];
