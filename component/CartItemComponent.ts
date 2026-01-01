@@ -74,12 +74,7 @@ export class CartItemComponent {
         await this.deleteButton.click();
     }
 
-    async isVisible(): Promise<boolean> {
-        try {
-            await this.root.waitFor({ state: 'visible' });
-            return true;
-        } catch {
-            return false;
-        }
+    get getLocator(): Locator {
+        return this.root;
     }
 }

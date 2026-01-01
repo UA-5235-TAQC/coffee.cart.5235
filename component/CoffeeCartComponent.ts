@@ -77,22 +77,12 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    async isVisible(): Promise<boolean> {
-        try {
-            await this.root.waitFor({ state: 'visible', timeout: 2000 });
-            return true;
-        } catch {
-            return false;
-        }
+    getPriceLocator(): Locator {
+        return this.priceLabel;
     }
 
-    async priceIsVisible(): Promise<boolean> {
-         try {
-            await this.priceLabel.waitFor({ state: 'visible' });
-            return true;
-        } catch {
-            return false;
-        }
+    getLocator(): Locator {
+        return this.root;
     }
 
 }

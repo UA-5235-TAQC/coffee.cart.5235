@@ -34,20 +34,6 @@ export class MenuPage extends BasePage {
         await this.page.goto("/");
     }
 
-    async isVisible(): Promise<boolean> {
-        try {
-            await this.itemsList.waitFor({ state: 'visible' });
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    async waitForVisible(): Promise<void> {
-        await this.itemsList.waitFor({ state: 'visible' });
-    }
-    async waitForHidden(): Promise<void> { }
-
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
         return text?.trim() || (() => { throw new Error("Total button text is missing or empty"); })();
@@ -59,9 +45,8 @@ export class MenuPage extends BasePage {
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$\\d+\\.\\d{2}$`) })
         });
-
         return new CoffeeCartComponent(itemLocator);
     }
 
@@ -116,7 +101,7 @@ export class MenuPage extends BasePage {
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
-    public get promoModal(): PromoModal {
-        return this.PromoModal;
+    get getLocator(): Locator {
+        return this.itemsList;
     }
 }

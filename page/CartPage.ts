@@ -5,6 +5,7 @@ import { CoffeeValue } from "../data/CoffeeTypes";
 
 
 export class CartPage extends BasePage {
+    private root: Locator;
     private totalQuantity: Locator;
     private emptyCartMessage: Locator;
     private cartItem: Locator;
@@ -12,6 +13,7 @@ export class CartPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+        this.root = this.page.locator('div.list').first();
         this.totalQuantity = this.page.getByRole("link", { name: "Cart" })
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
@@ -62,15 +64,7 @@ export class CartPage extends BasePage {
         return new CartItemComponent(itemLocator);
     }
 
-    async isVisible(): Promise<boolean> {
-        try {
-            await this.cartItem.waitFor({ state: 'visible' });
-            return true;
-        } catch {
-            return false;
-        }
+    get getLocator(): Locator {
+        return this.root;
     }
-
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
 }
