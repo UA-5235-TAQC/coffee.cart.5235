@@ -51,8 +51,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator(`[data-test="${dataTestValue}"]`)
         });
 
         return new CoffeeCartComponent(itemLocator);
@@ -103,13 +104,33 @@ export class MenuPage extends BasePage {
         }
     }
 
-    async showPaymentModal(): Promise<void> {
+    async showPaymentModal(): Promise<PaymentDetailsModalComponent> {
+        await this.totalBtn.waitFor({ state: 'visible', timeout: 5000 });
+        await this.totalBtn.scrollIntoViewIfNeeded();
         await this.totalBtn.click();
+        await this.PaymentModal.waitForVisible();
+        return this.PaymentModal;
     }
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
-    public get promoModal(): PromoModal {
+    get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+
+    public getTotalBtn(): Locator {
+        return this.totalBtn;
+    }
+
+    get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
+    }
+
+    async reloadPage(): Promise<void> {
+        await this.page.reload();
     }
 }
