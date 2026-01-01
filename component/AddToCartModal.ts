@@ -27,13 +27,24 @@ export class AddToCartModal extends Base {
         await this.declineButton.click();
     }
 
-    isVisible(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    /**
+     * Checks if the modal is currently visible
+     */
+    async isVisible(): Promise<boolean> {
+        return await this.modalContainer.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error('Method not implemented.');
+
+    /**
+     * Waits for the modal to become visible
+     */
+    async waitForVisible(): Promise<void> {
+        await this.modalContainer.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error('Method not implemented.');
+
+    /**
+     * Waits for the modal to become hidden
+     */
+    async waitForHidden(): Promise<void> {
+        await this.modalContainer.waitFor({ state: 'hidden' });
     }
 }
