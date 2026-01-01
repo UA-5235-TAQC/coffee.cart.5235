@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { MenuPage } from '../page/MenuPage';
 import { AddToCartModal } from '../component/AddToCartModal';
+import { CoffeeValue } from '../data/CoffeeTypes';
 
 test.describe('TC-16: Context Menu Functionality', () => {
     let menuPage: MenuPage;
@@ -15,7 +16,7 @@ test.describe('TC-16: Context Menu Functionality', () => {
     test('Add coffee to cart using right-click context menu dialog', async ({ page }) => {
         const initialCount = await menuPage.getItemCount();
         expect(initialCount).toBe(0); // Verify that cart counter shows 0
-        await menuPage.showConfirmModal('Espresso\\s*\\$' as any); // Right-click on the coffee icon
+        await menuPage.showConfirmModal('Espresso\\s*\\$' as CoffeeValue); // Right-click on the coffee icon
         await addToCartModal.waitForVisible();
         await addToCartModal.accept();
         await addToCartModal.waitForHidden();
