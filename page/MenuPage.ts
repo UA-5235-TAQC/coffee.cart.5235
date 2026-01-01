@@ -27,7 +27,7 @@ export class MenuPage extends BasePage {
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
         this.totalBtn = page.getByLabel('Proceed to checkout');
-        this.itemsList = page.locator('ul');
+        this.itemsList = page.locator('ul').nth(1);;
     }
 
     async navigate(): Promise<void> {
@@ -35,10 +35,17 @@ export class MenuPage extends BasePage {
     }
 
     async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
+        try {
+            await this.itemsList.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
     }
 
-    async waitForVisible(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.itemsList.waitFor({ state: 'visible' });
+    }
     async waitForHidden(): Promise<void> { }
 
     async getTotalBtnText(): Promise<string> {

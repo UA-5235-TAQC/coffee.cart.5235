@@ -1,6 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { CartItemComponent } from "../component";
+import { CoffeeValue } from "../data/CoffeeTypes";
 
 
 export class CartPage extends BasePage {
@@ -56,22 +57,18 @@ export class CartPage extends BasePage {
         await this.checkoutButton.click();
     }
 
-    async getItemByName(itemName: string): Promise<CartItemComponent | null> {
+    getItemByName(itemName: CoffeeValue): CartItemComponent {
         const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
-        const count = await itemLocator.count();
-
-        if (count === 0) {
-            return null;
-        }
-
-        const parsedItem = new CartItemComponent(itemLocator);
-        return parsedItem;
+        return new CartItemComponent(itemLocator);
     }
 
-
-
     async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
+        try {
+            await this.cartItem.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     async waitForVisible(): Promise<void> { }

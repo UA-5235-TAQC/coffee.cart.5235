@@ -59,7 +59,7 @@ export class CoffeeCartComponent {
         // Clicks on the cup body to invoke the context menu
         await this.cupClickArea.click({ button: 'right' });
     }
-
+    
     /**
      * Retrieves the list of ingredients as an array of strings.
      */
@@ -77,5 +77,22 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
+    async isVisible(): Promise<boolean> {
+        try {
+            await this.root.waitFor({ state: 'visible', timeout: 2000 });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async priceIsVisible(): Promise<boolean> {
+         try {
+            await this.priceLabel.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
+    }
 
 }

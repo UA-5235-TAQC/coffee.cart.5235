@@ -73,4 +73,13 @@ export class CartItemComponent {
     async removeFromCart(): Promise<void> {
         await this.deleteButton.click();
     }
+
+    async isVisible(): Promise<boolean> {
+        try {
+            await this.root.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }
