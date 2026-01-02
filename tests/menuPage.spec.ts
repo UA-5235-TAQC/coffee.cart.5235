@@ -7,11 +7,11 @@ test.describe("MenuPage - Smoke Tests", () => {
 
         // 1. Verify that the product list is displayed
         await menuPage.navigate();
-        await menuPage.waitForVisible();
+        await expect(menuPage.root).toBeVisible();
         // 2. Verify that the Americano product is displayed in the product list
-        await expect(menuPage.getCoffeeItem(americano).getLocator()).toBeVisible();
+        await expect(menuPage.getCoffeeItem(americano).root).toBeVisible();
         // 3. Verify that the Americano product price is displayed
-        await expect(menuPage.getCoffeeItem(americano).getPriceLocator()).toBeVisible();
+        await expect(menuPage.getCoffeeItem(americano).getPriceLocator).toBeVisible();
         // 4. Note the displayed price of the Americano product
         const americanoPrice = await menuPage.getCoffeeItem(americano).getPrice();
         // 5. Click on the Americano cup in the product list
@@ -21,10 +21,10 @@ test.describe("MenuPage - Smoke Tests", () => {
         expect(await menuPage.getTotalBtnPrice()).toBe(americanoPrice)
         // 7. Open the cart
         await menuPage.clickCartLink();
-        await expect(cartPage.getLocator).toBeVisible();
+        await expect(cartPage.root).toBeVisible();
         // 8. Verify cart contents
         expect(await cartPage.getTotalQuantity()).toBe(1);
-        await expect(cartPage.getItemByName(americano).getLocator).toBeVisible();
+        await expect(cartPage.getItemByName(americano).root).toBeVisible();
         expect(await cartPage.getItemByName(americano).getUnitPrice()).toBe(americanoPrice);
         expect(await cartPage.getItemByName(americano).getQuantity()).toBe(1);
         expect(await cartPage.getItemByName(americano).getTotalPrice()).toBe(americanoPrice);

@@ -16,18 +16,20 @@ export class MenuPage extends BasePage {
     protected PromoModal: PromoModal;
     protected SuccessSnackbar: SuccessSnackbarComponent;
     protected CartPreview: CartPreviewComponent;
+    private _root: Locator;
     protected totalBtn: Locator;
     protected itemsList: Locator;
 
     constructor(page: Page) {
         super(page);
+        this._root = page.locator('ul').nth(1).locator('..');
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this.totalBtn = page.getByLabel('Proceed to checkout');
-        this.itemsList = page.locator('ul').nth(1);;
+        this.totalBtn = this._root.locator('.pay-container').getByLabel('Proceed to checkout');
+        this.itemsList = this._root.locator('ul');
     }
 
     async navigate(): Promise<void> {
@@ -101,7 +103,7 @@ export class MenuPage extends BasePage {
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
-    get getLocator(): Locator {
-        return this.itemsList;
+    get root(): Locator {
+        return this._root;
     }
 }

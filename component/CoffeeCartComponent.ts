@@ -4,21 +4,21 @@ import { Locator } from '@playwright/test';
  * Represents the coffee card component on the menu page.
  */
 export class CoffeeCartComponent {
-    private root: Locator;
+    private _root: Locator;
     private nameHeader: Locator;
     private priceLabel: Locator;
     private cupClickArea: Locator; // button area for adding coffee (it's not a button element)
     private ingredients: Locator;
 
     constructor(root: Locator) {
-        this.root = root;
+        this._root = root;
 
-        this.nameHeader = this.root.locator('h4');
-        this.priceLabel = this.root.locator('h4 small');
+        this.nameHeader = this._root.locator('h4');
+        this.priceLabel = this._root.locator('h4 small');
 
         // Target the .cup-body as it carries the click event listener
-        this.cupClickArea = this.root.locator('.cup-body');
-        this.ingredients = this.root.locator('.ingredient');
+        this.cupClickArea = this._root.locator('.cup-body');
+        this.ingredients = this._root.locator('.ingredient');
     }
 
     /**
@@ -77,12 +77,12 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    getPriceLocator(): Locator {
+    get getPriceLocator(): Locator {
         return this.priceLabel;
     }
 
-    getLocator(): Locator {
-        return this.root;
+    get root(): Locator {
+        return this._root;
     }
 
 }
