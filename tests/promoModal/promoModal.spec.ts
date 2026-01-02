@@ -5,7 +5,10 @@ import { CoffeeTypes } from "../../data/CoffeeTypes";
 test.describe("Promo Modal", () => {
   test.beforeEach(async ({ menuPage }) => {
     await menuPage.navigate();
-    await expect.poll(() => menuPage.getItemCount()).toBe(0);
+
+    const cartItemCount = await menuPage.getItemCount();
+
+    expect(cartItemCount).toBe(0);
   });
 
   test("TC-011: Checking the functionality of the Promotional Offer", async ({ menuPage }) => {
@@ -16,7 +19,7 @@ test.describe("Promo Modal", () => {
     await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
     await menuPage.addCoffeeToCart(CoffeeTypes.Americano.en);
     await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
-    
+
     await promoModal.waitForVisible();
     await promoModal.acceptPromo();
     await promoModal.waitForHidden();
@@ -32,8 +35,11 @@ test.describe("Promo Modal", () => {
     let amountOfItemsInCart = 4;
     let expectedTotal = espressoPrice + americanoPrice + cappuccinoPrice + promoCoffeePrice;
 
-    await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(expectedTotal);
-    await expect.poll(() => menuPage.getItemCount()).toBe(amountOfItemsInCart);
+    const itemCount = await menuPage.getItemCount();
+    const totalBtnPrice = await menuPage.getTotalBtnPrice();
+
+    expect(itemCount).toBe(amountOfItemsInCart);
+    expect(totalBtnPrice).toBe(expectedTotal);
 
     // Add another 2 coffees and skip the promo
     await menuPage.addCoffeeToCart(CoffeeTypes.CafeBreve.en);
@@ -52,8 +58,11 @@ test.describe("Promo Modal", () => {
     amountOfItemsInCart += 2;
     expectedTotal += cafeBrevePrice + flatWhitePrice;
 
-    await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(expectedTotal);
-    await expect.poll(() => menuPage.getItemCount()).toBe(amountOfItemsInCart);
+    const cartItemCountAfterSkip = await menuPage.getItemCount();
+    const cartTotalPriceAfterSkip = await menuPage.getTotalBtnPrice();
+
+    expect(cartItemCountAfterSkip).toBe(amountOfItemsInCart);
+    expect(cartTotalPriceAfterSkip).toBe(expectedTotal);
 
     // Add another 3 coffees and skip the promo by adding 1 more coffee
     await menuPage.addCoffeeToCart(CoffeeTypes.CafeLatte.en);
@@ -71,7 +80,10 @@ test.describe("Promo Modal", () => {
     amountOfItemsInCart += 4;
     expectedTotal += cafeLattePrice + espressoConPannaPrice + espressoMacchiatoPrice + mochaPrice;
 
-    await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(expectedTotal);
-    await expect.poll(() => menuPage.getItemCount()).toBe(amountOfItemsInCart);
+    const cartItemCountAfterForceClose = await menuPage.getItemCount();
+    const cartTotalPriceAfterForceClose = await menuPage.getTotalBtnPrice();
+
+    expect(cartItemCountAfterForceClose).toBe(amountOfItemsInCart);
+    expect(cartTotalPriceAfterForceClose).toBe(expectedTotal);
   });
 });
