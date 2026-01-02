@@ -1,5 +1,4 @@
 import {Locator} from '@playwright/test';
-import {Base} from "../Base";
 
 /**
  * Represents the coffee card component on the menu page.
