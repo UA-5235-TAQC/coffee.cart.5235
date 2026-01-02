@@ -3,27 +3,29 @@ import { Base } from "../Base";
 
 export class CartPreviewComponent extends Base {
 
-    protected cartPreviewContainer: Locator;
+    protected root: Locator;
     protected cartItems: Locator;
 
     constructor(page: Page) {
         super(page);
-        this.cartPreviewContainer = page.locator(".pay-container .cart-preview");
-        this.cartItems = this.cartPreviewContainer.locator("li.list-item");
+        this.root = page.locator(".pay-container .cart-preview");
+        this.cartItems = this.root.locator("li.list-item");
     }
 
-    isVisible(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async isVisible(): Promise<boolean> {
+        return await this.root.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async waitForVisible(): Promise<void> {
+        await this.root.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async waitForHidden(): Promise<void> {
+        await this.root.waitFor({ state: 'hidden' });
     }
 
     get cartPreviewElement() {
-        return this.cartPreviewContainer;
+        return this.root;
     }
 
     // Returns a locator for a specific item (li) in the cart.
@@ -33,13 +35,13 @@ export class CartPreviewComponent extends Base {
         });
     }
 
-    async increaseItemQuantity(itemName: string) {
+    async increaseItemQuantity(itemName: string): Promise<void> {
         await this.getCartItem(itemName)
             .locator(`button[aria-label="Add one ${itemName}"]`)
             .click();
     }
 
-    async decreaseItemQuantity(itemName: string) {
+    async decreaseItemQuantity(itemName: string): Promise<void> {
         await this.getCartItem(itemName)
             .locator(`button[aria-label="Remove one ${itemName}"]`)
             .click();
