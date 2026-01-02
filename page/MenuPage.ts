@@ -7,7 +7,7 @@ import {
     PromoModal,
     SuccessSnackbarComponent, CartPreviewComponent
 } from "../component";
-import { StringUtils } from "../utils/stringUtils";
+import { StringUtils } from "../utils";
 import { CoffeeValue, CoffeeTypes } from "../data/CoffeeTypes";
 
 export class MenuPage extends BasePage {
@@ -51,8 +51,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator(`[data-test="${dataTestValue}"]`)
         });
 
         return new CoffeeCartComponent(itemLocator);
