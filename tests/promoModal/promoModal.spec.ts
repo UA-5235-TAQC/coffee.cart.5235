@@ -35,10 +35,10 @@ test.describe("Promo Modal", () => {
     let amountOfItemsInCart = 4;
     let expectedTotal = espressoPrice + americanoPrice + cappuccinoPrice + promoCoffeePrice;
 
-    const itemCount = await menuPage.getItemCount();
+    const cartItemCount = await menuPage.getItemCount();
     const totalBtnPrice = await menuPage.getTotalBtnPrice();
 
-    expect(itemCount).toBe(amountOfItemsInCart);
+    expect(cartItemCount).toBe(amountOfItemsInCart);
     expect(totalBtnPrice).toBe(expectedTotal);
 
     // Add another 2 coffees and skip the promo
