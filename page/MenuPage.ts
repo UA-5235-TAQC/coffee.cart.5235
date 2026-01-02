@@ -16,30 +16,25 @@ export class MenuPage extends BasePage {
     protected PromoModal: PromoModal;
     protected SuccessSnackbar: SuccessSnackbarComponent;
     protected CartPreview: CartPreviewComponent;
+    private _root: Locator;
     protected totalBtn: Locator;
     protected itemsList: Locator;
 
     constructor(page: Page) {
         super(page);
+        this._root = page.locator('ul').nth(1).locator('..');
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this.totalBtn = page.getByLabel('Proceed to checkout');
-        this.itemsList = page.locator('ul');
+        this.totalBtn = this._root.locator('.pay-container').getByLabel('Proceed to checkout');
+        this.itemsList = this._root.locator('ul');
     }
 
     async navigate(): Promise<void> {
         await this.page.goto("/");
     }
-
-    async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
-    }
-
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
 
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
@@ -52,9 +47,8 @@ export class MenuPage extends BasePage {
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$\\d+\\.\\d{2}$`) })
         });
-
         return new CoffeeCartComponent(itemLocator);
     }
 
@@ -109,7 +103,7 @@ export class MenuPage extends BasePage {
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
-    public get promoModal(): PromoModal {
-        return this.PromoModal;
+    get root(): Locator {
+        return this._root;
     }
 }
