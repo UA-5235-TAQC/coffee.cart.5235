@@ -1,6 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { CartItemComponent } from "../component";
+import { CoffeeValue } from "../data/CoffeeTypes";
 
 
 export class CartPage extends BasePage {
@@ -8,6 +9,7 @@ export class CartPage extends BasePage {
     private emptyCartMessage: Locator;
     private cartItem: Locator;
     private checkoutButton: Locator;
+    protected cartItemList: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -15,6 +17,7 @@ export class CartPage extends BasePage {
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
         this.checkoutButton = this.page.locator('[data-test="checkout"]');
+        this.cartItemList = this.page.locator('div.list');
     }
 
     async navigate(): Promise<void> {
@@ -24,10 +27,12 @@ export class CartPage extends BasePage {
     async getItemsList(): Promise<CartItemComponent[]> {
         const itemList: CartItemComponent[] = [];
         const all = await this.cartItem.all();
+
         for (const item of all) {
             itemList.push(new CartItemComponent(item));
         }
-        return itemList
+
+        return itemList;
     }
 
     async getTotalPrice(): Promise<number> {
@@ -56,31 +61,31 @@ export class CartPage extends BasePage {
         await this.checkoutButton.click();
     }
 
-    async getItemByName(itemName: string): Promise<CartItemComponent | null> {
+    async getItemByName(itemName: CoffeeValue): Promise<CartItemComponent> {
         const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
         const count = await itemLocator.count();
 
         if (count === 0) {
-            return null;
+            throw new Error(`Item with name "${itemName}" not found in the cart.`);
         }
 
         const parsedItem = new CartItemComponent(itemLocator);
         return parsedItem;
     }
 
-
-
     async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
+        return this.cartItemList.isVisible();
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.cartItemList.waitFor({ state: 'visible' });
+    }
 
-    async setLocalStorage(key: string, value: string) {
-        await this.page.evaluate(
-            ([k, v]) => localStorage.setItem(k, v),
-            [key, value]
-        );
+    async waitForHidden(): Promise<void> {
+        await this.cartItemList.waitFor({ state: 'hidden' });
+    }
+
+    get itemList(): Locator {
+        return this.cartItemList;
     }
 }

@@ -16,7 +16,7 @@ export class MenuPage extends BasePage {
     protected PromoModal: PromoModal;
     protected SuccessSnackbar: SuccessSnackbarComponent;
     protected CartPreview: CartPreviewComponent;
-    protected totalBtn: Locator;
+    protected _totalBtn: Locator;
     protected itemsList: Locator;
 
     constructor(page: Page) {
@@ -26,12 +26,12 @@ export class MenuPage extends BasePage {
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this.totalBtn = page.getByLabel('Proceed to checkout');
-        this.itemsList = page.locator('ul');
+        this._totalBtn = page.getByRole('button', {name: 'Proceed to checkout'});
+        this.itemsList = this.page.locator('ul');
     }
 
-    async navigate(): Promise<void> {
-        await this.page.goto("/");
+    async navigate(path: string = "/"): Promise<void> {
+        await this.page.goto(path);
     }
 
     async isVisible(): Promise<boolean> {
@@ -39,13 +39,15 @@ export class MenuPage extends BasePage {
     }
 
     async waitForVisible(): Promise<void> {
+        await this._totalBtn.waitFor({state: 'visible'});
     }
 
     async waitForHidden(): Promise<void> {
+        await this._totalBtn.waitFor({state: 'hidden'});
     }
 
     async getTotalBtnText(): Promise<string> {
-        const text = await this.totalBtn.textContent();
+        const text = await this._totalBtn.textContent();
         return text?.trim() || (() => {
             throw new Error("Total button text is missing or empty");
         })();
@@ -109,43 +111,46 @@ export class MenuPage extends BasePage {
         }
     }
 
-    async showPaymentModal(): Promise<PaymentDetailsModalComponent> {
-        await this.totalBtn.waitFor({state: 'visible', timeout: 5000});
-        await this.totalBtn.scrollIntoViewIfNeeded();
-        await this.totalBtn.click();
+    async showPaymentModal(): Promise<void> {
+        await this._totalBtn.waitFor({state: 'visible', timeout: 5000});
+        await this._totalBtn.scrollIntoViewIfNeeded();
+        await this._totalBtn.click();
         await this.PaymentModal.waitForVisible();
-        return this.PaymentModal;
     }
 
     async showCheckout(): Promise<void> {
-        await this.totalBtn.hover();
+        await this._totalBtn.hover();
     }
 
-    get promoModal(): PromoModal {
+    public get promoModal(): PromoModal {
         return this.PromoModal;
     }
 
-    get paymentModal(): PaymentDetailsModalComponent {
-        return this.PaymentModal;
+    async getAllCoffeeItems(): Promise<CoffeeCartComponent[]> {
+        const items = this.itemsList.locator('li').filter({
+            has: this.page.locator('div.cup-body[data-test]')
+        });
+
+        const count = await items.count();
+        const coffeeItems: CoffeeCartComponent[] = [];
+
+        for (let i = 0; i < count; i++) {
+            coffeeItems.push(new CoffeeCartComponent(items.nth(i)));
+        }
+
+        return coffeeItems;
     }
 
-    get successSnackbar(): SuccessSnackbarComponent {
-        return this.SuccessSnackbar;
-    }
-
-    async reloadPage(): Promise<void> {
-        await this.page.reload();
-    }
-
-    async addToLocalStorage(coffee: string) {
-        await this.page.evaluate((c) => {
-            const current = JSON.parse(localStorage.getItem('cart') || '[]');
-            current.push(c);
-            localStorage.setItem('cart', JSON.stringify(current));
-        }, coffee);
-    }
-
-    async getLocalStorage(key: string) {
-        return this.page.evaluate((k) => localStorage.getItem(k), key);
+    async getVisibleCoffeeItems(): Promise<CoffeeCartComponent[]> {
+        const items = this.instance.locator('ul > li').filter({
+            has: this.instance.locator('div.cup-body[data-test]')
+        });
+        const count = await items.count();
+        const coffeeItems: CoffeeCartComponent[] = [];
+        for (let i = 0; i < count; i++) {
+            const item = new CoffeeCartComponent(items.nth(i));
+            if (await item.isVisible()) coffeeItems.push(item);
+        }
+        return coffeeItems;
     }
 }

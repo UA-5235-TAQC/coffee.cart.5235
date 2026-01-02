@@ -1,5 +1,4 @@
-import {Locator} from '@playwright/test';
-import {Base} from "../Base";
+import { Locator } from '@playwright/test';
 
 /**
  * Represents the coffee card component on the menu page.
@@ -58,7 +57,7 @@ export class CoffeeCartComponent {
      */
     async rightClick(): Promise<void> {
         // Clicks on the cup body to invoke the context menu
-        await this.cupClickArea.click({button: 'right'});
+        await this.cupClickArea.click({ button: 'right' });
     }
 
     /**
@@ -76,13 +75,6 @@ export class CoffeeCartComponent {
     async hasIngredient(name: string): Promise<boolean> {
         const ingredients = await this.getIngredients();
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
-    }
-
-    /**
-     * Single-click on the coffee title (does not translate)
-     */
-    async clickName(): Promise<void> {
-        await this.nameHeader.click();
     }
 
     async isVisible(): Promise<boolean> {

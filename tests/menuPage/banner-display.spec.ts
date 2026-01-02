@@ -1,77 +1,78 @@
-import {expect} from "@playwright/test";
-import {test} from "../../fixtures/fixturePage";
+import { test, expect } from "../../fixtures/fixturePage";
 import {CoffeeTypes} from "../../data/CoffeeTypes";
+import {PaymentDetailsModalComponent} from "../../component";
+import {expectLobsterFont} from "../../utils/styleUtils";
 
 test.describe("TC-25: Promo banner & theme persistence via URL parameter", () => {
 
     test("Promo banner display and theme persistence when using ?ad=1", async ({menuPage, cartPage, page}) => {
 
-        await page.goto("/");
+        await menuPage.navigate();
 
-        // на https://coffee-cart.app/
-        const stylesDefault = await page.evaluate(() => {
-            const s = window.getComputedStyle(document.body);
-            return {
-                fontFamily: s.fontFamily,
-                fontWeight: s.fontWeight,
-                fontSize: s.fontSize,
-                lineHeight: s.lineHeight,
-                color: s.color
-            };
-        });
-        console.log('Default:', stylesDefault);
+        // Check Lobster font is NOT applied initially
+        const initialStyleExists = await menuPage.instance.evaluate(() =>
+            Array.from(document.querySelectorAll("style")).some(s =>
+                s.innerText.includes("font-family: 'Lobster'")
+            )
+        );
+        expect(initialStyleExists).toBe(false);
 
         // Step 1: Navigate with ad parameter
-        await page.goto("/?ad=1");
+        await menuPage.navigate("/?ad=1");
+        const styleExistsAfter = await expectLobsterFont(menuPage.instance);
+        expect(styleExistsAfter).toBe(true);
 
-        // на https://coffee-cart.app/?ad=1
-        const stylesAd = await page.evaluate(() => {
-            const s = window.getComputedStyle(document.body);
-            return {
-                fontFamily: s.fontFamily,
-                fontWeight: s.fontWeight,
-                fontSize: s.fontSize,
-                lineHeight: s.lineHeight,
-                color: s.color
-            };
-        });
-        console.log('Ad:', stylesAd);
 
-        // Verify promo banner is visible
-        const promoBanner = page.locator('img[src="/banner.jpg"]');
+        // Step 2: Verify main page elements are visible
+        const promoBanner = menuPage.instance.locator('img[alt*="free 1 bag of coffe beans"]');
         await expect(promoBanner).toBeVisible();
+        const expectedCoffeeCount = Object.keys(CoffeeTypes).length;
+        const coffeeItems = await menuPage.getVisibleCoffeeItems();
+        expect(coffeeItems.length).toBe(expectedCoffeeCount);
+        for (const item of coffeeItems) {
+            expect(await item.isVisible()).toBe(true);
+        }
 
-        // Step 2: Verify main page elements are accessible
-        const espresso = menuPage.getCoffeeItem(CoffeeTypes.Espresso.en);
-        expect(await espresso.getName()).toBe(CoffeeTypes.Espresso.en);
+        // Step 3: Add Espresso to cart
+        const espressoName = CoffeeTypes.Espresso.en;
+        await menuPage.addCoffeeToCart(espressoName);
+
+        const espresso = menuPage.getCoffeeItem(espressoName);
+        const espressoPrice = await espresso.getPrice();
+
         expect(await espresso.isVisible()).toBe(true);
+        expect(await espresso.getName()).toBe(espressoName);
 
-        // Step 3: Add drink and navigate to Cart
-        await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
-        await menuPage.addToLocalStorage(CoffeeTypes.Espresso.en);
-        const cartData = await menuPage.getLocalStorage('cart') ?? '[]';
-        await cartPage.setLocalStorage('cart', cartData);
-        await cartPage.navigate();
+        const cartItemCount = await menuPage.getItemCount();
+        const totalBtnPrice = await menuPage.getTotalBtnPrice();
 
-        // Verify cart page loaded & theme persisted
+        expect(cartItemCount).toBe(1);
+        expect(totalBtnPrice).toBe(espressoPrice);
+
+        await menuPage.clickCartLink();
         await expect(page).toHaveURL(/\/cart/);
-        const cartItems = await cartPage.getItemsList();
-        expect(cartItems.length).toBeGreaterThan(0);
+        await expect(cartPage.itemList).toBeVisible();
+
+        const cartItem = await cartPage.getItemByName(espressoName);
+        await expect(cartItem.container).toBeVisible();
+        expect(await cartItem.getQuantity()).toBe(1);
+        expect(await cartItem.getTotalPrice()).toBe(espressoPrice);
 
         // Step 4: Return to main page
-        await menuPage.navigate();
-        await expect(promoBanner).toBeVisible();
+        await menuPage.clickMenuLink();
+        await expect(promoBanner).toBeHidden();
+
+        // Lobster font still persists on main page
+        const styleExists = await expectLobsterFont(menuPage.instance);
+        expect(styleExists).toBe(true);
 
         // Step 5: Open Payment form
-        const paymentModal = await menuPage.showPaymentModal();
-        expect(paymentModal.getTitle()).toContain("Payment details");
+        await menuPage.instance.getByLabel('Proceed to checkout').click();
+        const paymentModal = new PaymentDetailsModalComponent(menuPage.instance);
+        await paymentModal.waitForVisible();
+        expect(await paymentModal.getTitle()).toContain("Payment details");
 
-        // Step 6: Remove ?ad=1 and reload
-        await page.goto("/");
-        await page.reload();
-
-        // Promo banner disappears
-        await expect(promoBanner).toBeHidden();
+        const styleExistsPaymentModal = await expectLobsterFont(paymentModal.pageInstance);
+        expect(styleExistsPaymentModal).toBe(true);
     });
-
 });
