@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { Base } from '../Base';
 
 export class PromoModal extends Base {
@@ -13,20 +13,23 @@ export class PromoModal extends Base {
         this.skipButton = page.getByRole('button', { name: "Nah, I'll skip." });
     }
 
-    async acceptPromo() {
+    async acceptPromo(): Promise<void> {
         await this.acceptButton.click();
     }
 
-    async skipPromo() {
+    async skipPromo(): Promise<void> {
         await this.skipButton.click();
     }
-    isVisible(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+
+    async isVisible(): Promise<boolean> {
+        return await this.root.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error('Method not implemented.');
+
+    async waitForVisible(): Promise<void> {
+        await this.root.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error('Method not implemented.');
+
+    async waitForHidden(): Promise<void> {
+        await this.root.waitFor({ state: 'hidden' });
     }
 }
