@@ -76,4 +76,11 @@ export class CartPage extends BasePage {
 
     async waitForVisible(): Promise<void> { }
     async waitForHidden(): Promise<void> { }
+
+    async setLocalStorage(key: string, value: string) {
+        await this.page.evaluate(
+            ([k, v]) => localStorage.setItem(k, v),
+            [key, value]
+        );
+    }
 }

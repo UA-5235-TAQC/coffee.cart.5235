@@ -1,5 +1,5 @@
-import { Locator, Page } from "@playwright/test";
-import { BasePage } from "./BasePage";
+import {Locator, Page} from "@playwright/test";
+import {BasePage} from "./BasePage";
 import {
     CoffeeCartComponent,
     AddToCartModal,
@@ -7,8 +7,8 @@ import {
     PromoModal,
     SuccessSnackbarComponent, CartPreviewComponent
 } from "../component";
-import { StringUtils } from "../utils/stringUtils";
-import { CoffeeValue, CoffeeTypes } from "../data/CoffeeTypes";
+import {StringUtils} from "../utils/stringUtils";
+import {CoffeeValue, CoffeeTypes} from "../data/CoffeeTypes";
 
 export class MenuPage extends BasePage {
     protected ConfirmModal: AddToCartModal;
@@ -38,12 +38,17 @@ export class MenuPage extends BasePage {
         return this.page.isVisible("");
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+    }
+
+    async waitForHidden(): Promise<void> {
+    }
 
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
-        return text?.trim() || (() => { throw new Error("Total button text is missing or empty"); })();
+        return text?.trim() || (() => {
+            throw new Error("Total button text is missing or empty");
+        })();
     }
 
     async getTotalBtnPrice(): Promise<number> {
@@ -51,8 +56,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator(`[data-test="${dataTestValue}"]`)
         });
 
         return new CoffeeCartComponent(itemLocator);
@@ -103,13 +109,43 @@ export class MenuPage extends BasePage {
         }
     }
 
-    async showPaymentModal(): Promise<void> {
+    async showPaymentModal(): Promise<PaymentDetailsModalComponent> {
+        await this.totalBtn.waitFor({state: 'visible', timeout: 5000});
+        await this.totalBtn.scrollIntoViewIfNeeded();
         await this.totalBtn.click();
+        await this.PaymentModal.waitForVisible();
+        return this.PaymentModal;
     }
 
-    async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
+    async showCheckout(): Promise<void> {
+        await this.totalBtn.hover();
+    }
 
-    public get promoModal(): PromoModal {
+    get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+
+    get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
+    }
+
+    async reloadPage(): Promise<void> {
+        await this.page.reload();
+    }
+
+    async addToLocalStorage(coffee: string) {
+        await this.page.evaluate((c) => {
+            const current = JSON.parse(localStorage.getItem('cart') || '[]');
+            current.push(c);
+            localStorage.setItem('cart', JSON.stringify(current));
+        }, coffee);
+    }
+
+    async getLocalStorage(key: string) {
+        return this.page.evaluate((k) => localStorage.getItem(k), key);
     }
 }
