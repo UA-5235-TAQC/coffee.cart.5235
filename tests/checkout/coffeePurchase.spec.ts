@@ -6,7 +6,10 @@ import { TestDataBuilder } from "../../data";
 test.describe("Coffee Purchase", () => {
   test.beforeEach(async ({ menuPage }) => {
     await menuPage.navigate();
-    await expect.poll(() => menuPage.getItemCount()).toBe(0);
+
+    const cartItemCount = await menuPage.getItemCount();
+
+    expect(cartItemCount).toBe(0);
   });
 
   test("TC-001: Successful purchase of one product", async ({ menuPage }) => {
@@ -14,8 +17,11 @@ test.describe("Coffee Purchase", () => {
 
     await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
 
-    await expect.poll(() => menuPage.getItemCount()).toBe(1);
-    await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(espressoPrice);
+    const cartItemCount = await menuPage.getItemCount();
+    const totalBtnPrice = await menuPage.getTotalBtnPrice();
+
+    expect(cartItemCount).toBe(1);
+    expect(totalBtnPrice).toBe(espressoPrice);
 
     const { paymentModal, successSnackbar } = menuPage;
     const { name, email } = TestDataBuilder.validPaymentDetails();
@@ -30,6 +36,8 @@ test.describe("Coffee Purchase", () => {
     await paymentModal.submitPayment();
     await successSnackbar.waitForVisible();
 
-    await expect.poll(() => successSnackbar.getMessage()).toBe(TestDataBuilder.validSuccessSnackbarMessage());
+    const snackbarMessage = await successSnackbar.getMessage();
+
+    expect(snackbarMessage).toBe(TestDataBuilder.validSuccessSnackbarMessage());
   });
 });
