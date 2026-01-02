@@ -5,7 +5,10 @@ import { CoffeeTypes } from "../../data/CoffeeTypes";
 test.describe("Cart item", () => {
   test.beforeEach(async ({ menuPage }) => {
     await menuPage.navigate();
-    await expect.poll(() => menuPage.getItemCount()).toBe(0);
+
+    const cartItemCount = await menuPage.getItemCount();
+
+    expect(cartItemCount).toBe(0);
   });
 
   test("TC-006: Managing the number of items in the cart", async ({ menuPage, cartPage }) => {
@@ -18,8 +21,11 @@ test.describe("Cart item", () => {
     let amountOfItemsInCart = 3;
     let expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
 
-    await expect.poll(() => menuPage.getItemCount()).toBe(amountOfItemsInCart);
-    await expect.poll(() => menuPage.getTotalBtnPrice()).toBe(expectedTotalPrice);
+    const cartItemCount = await menuPage.getItemCount();
+    const totalBtnPrice = await menuPage.getTotalBtnPrice();
+
+    expect(cartItemCount).toBe(amountOfItemsInCart);
+    expect(totalBtnPrice).toBe(expectedTotalPrice);
 
     await menuPage.clickCartLink();
     await expect(cartPage.itemList).toBeVisible();
@@ -28,20 +34,28 @@ test.describe("Cart item", () => {
 
     await expect(cartItem.container).toBeVisible();
 
-    await expect.poll(() => cartItem.getQuantity()).toBe(amountOfItemsInCart);
-    await expect.poll(() => cartItem.getTotalPrice()).toBe(expectedTotalPrice);
+    const cartItemQuantity = await cartItem.getQuantity();
+    const cartItemTotalPrice = await cartItem.getTotalPrice();
+
+    expect(cartItemQuantity).toBe(amountOfItemsInCart);
+    expect(cartItemTotalPrice).toBe(expectedTotalPrice);
 
     await cartItem.increaseQuantity();
 
     amountOfItemsInCart += 1;
     expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
 
-    await expect.poll(() => cartItem.getQuantity()).toBe(amountOfItemsInCart);
-    await expect.poll(() => cartItem.getTotalPrice()).toBe(expectedTotalPrice);
+    const updatedCartItemQuantity = await cartItem.getQuantity();
+    const updatedCartItemTotalPrice = await cartItem.getTotalPrice();
+
+    expect(updatedCartItemQuantity).toBe(amountOfItemsInCart);
+    expect(updatedCartItemTotalPrice).toBe(expectedTotalPrice);
 
     await cartItem.decreaseQuantityBy(4);
 
+    const isCartEmpty = await cartPage.isEmpty();
+
     await expect(cartItem.container).toBeHidden();
-    await expect.poll(() => cartPage.isEmpty()).toBe(true);
+    expect(isCartEmpty).toBe(true);
   });
 });
