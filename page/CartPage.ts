@@ -1,6 +1,6 @@
-import { Page, Locator } from "@playwright/test";
-import { BasePage } from "./BasePage";
-import { CartItemComponent } from "../component";
+import {Page, Locator} from "@playwright/test";
+import {BasePage} from "./BasePage";
+import {CartItemComponent} from "../component";
 
 
 export class CartPage extends BasePage {
@@ -11,7 +11,7 @@ export class CartPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.totalQuantity = this.page.getByRole("link", { name: "Cart" })
+        this.totalQuantity = this.page.getByRole("link", {name: "Cart"})
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
         this.checkoutButton = this.page.locator('[data-test="checkout"]');
@@ -57,7 +57,7 @@ export class CartPage extends BasePage {
     }
 
     async getItemByName(itemName: string): Promise<CartItemComponent | null> {
-        const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
+        const itemLocator = this.cartItem.filter({hasText: itemName}).first();
         const count = await itemLocator.count();
 
         if (count === 0) {
@@ -69,11 +69,20 @@ export class CartPage extends BasePage {
     }
 
 
-
     async isVisible(): Promise<boolean> {
         return this.page.isVisible("");
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+    }
+
+    async waitForHidden(): Promise<void> {
+    }
+
+    async setLocalStorage(key: string, value: string) {
+        await this.page.evaluate(
+            ([k, v]) => localStorage.setItem(k, v),
+            [key, value]
+        );
+    }
 }

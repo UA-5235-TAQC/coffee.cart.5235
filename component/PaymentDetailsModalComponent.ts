@@ -1,5 +1,5 @@
-import { Page, Locator } from "@playwright/test";
-import { Base } from "../Base";
+import {Page, Locator} from "@playwright/test";
+import {Base} from "../Base";
 
 export class PaymentDetailsModalComponent extends Base {
     protected root: Locator;
@@ -19,7 +19,7 @@ export class PaymentDetailsModalComponent extends Base {
         const headerSection = this.root.locator('section');
         const form = this.root.locator('form[aria-label="Payment form"]');
 
-        this.title = headerSection.locator('h1', { hasText: 'Payment details' });
+        this.title = headerSection.locator('h1', {hasText: 'Payment details'});
         this.closeButton = headerSection.locator('button.close');
         this.descriptionText = this.root.locator('p').first();
 
@@ -35,11 +35,11 @@ export class PaymentDetailsModalComponent extends Base {
     }
 
     async waitForVisible(): Promise<void> {
-        await this.root.waitFor({ state: 'visible' });
+        await this.root.waitFor({state: 'visible'});
     }
 
     async waitForHidden(): Promise<void> {
-        await this.root.waitFor({ state: 'hidden' });
+        await this.root.waitFor({state: 'hidden'});
     }
 
     async getTitle(): Promise<string | null> {
@@ -88,5 +88,21 @@ export class PaymentDetailsModalComponent extends Base {
 
     async submitPayment(): Promise<void> {
         await this.submitButton.click();
+    }
+
+    async getEmailValidationMessage(): Promise<string> {
+        return this.emailInput.evaluate((el: HTMLInputElement) => el.validationMessage);
+    }
+
+    async isNameValid(): Promise<boolean> {
+        return this.nameInput.evaluate((el: HTMLInputElement) => el.checkValidity());
+    }
+
+    async isEmailValid(): Promise<boolean> {
+        return this.emailInput.evaluate((el: HTMLInputElement) => el.checkValidity());
+    }
+
+    public getRoot(): Locator {
+        return this.root;
     }
 }
