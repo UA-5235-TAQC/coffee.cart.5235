@@ -45,11 +45,11 @@ test.describe("Cart item", () => {
     amountOfItemsInCart += 1;
     expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
 
-    const updatedCartItemQuantity = await cartItem.getQuantity();
-    const updatedCartItemTotalPrice = await cartItem.getTotalPrice();
+    const cartItemQuantityAfterIncrease = await cartItem.getQuantity();
+    const cartItemTotalPriceAfterIncrease = await cartItem.getTotalPrice();
 
-    expect(updatedCartItemQuantity).toBe(amountOfItemsInCart);
-    expect(updatedCartItemTotalPrice).toBe(expectedTotalPrice);
+    expect(cartItemQuantityAfterIncrease).toBe(amountOfItemsInCart);
+    expect(cartItemTotalPriceAfterIncrease).toBe(expectedTotalPrice);
 
     await cartItem.decreaseQuantityBy(4);
 
