@@ -38,9 +38,7 @@ export class MenuPage extends BasePage {
         return this.page.isVisible("");
     }
 
-    async waitForVisible(): Promise<void> {
-        await this.page.waitForSelector('body', { state: 'visible' });
-     }
+    async waitForVisible(): Promise<void> { }
     async waitForHidden(): Promise<void> { }
 
     async getTotalBtnText(): Promise<string> {

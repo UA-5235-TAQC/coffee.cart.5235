@@ -14,16 +14,15 @@ export class PromoModal extends Base {
     }
 
     async acceptPromo() {
-        await this.waitForVisible();
+        await this.acceptButton.waitFor({ state: 'visible' });
         await this.acceptButton.click();
-        await this.waitForHidden();  
     }
 
     async skipPromo() {
         await this.skipButton.click();
     }
-    isVisible(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async isVisible(): Promise<boolean> {
+        return await this.root.isVisible();
     }
     async waitForVisible(): Promise<void> {
         await this.root.waitFor({ state: 'visible'});

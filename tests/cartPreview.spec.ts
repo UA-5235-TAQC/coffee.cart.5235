@@ -1,30 +1,26 @@
-import { test, expect } from "@playwright/test";
-import { CartPreviewComponent } from "../component/CartPreviewComponent";
-import { MenuPage } from "../page/MenuPage";
+import { expect } from "@playwright/test";
+import { test } from "../fixtures/fixturePage";
 import env from "../config/env";
+import { CartPreviewComponent  } from "../component";
 
 test.describe("CartPreview - Smoke Tests", () => {
-  let cartPreview: CartPreviewComponent;
-  let menuPage: MenuPage;
-  const baseClientUrl = env.BASE_CLIENT_URL;
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto(baseClientUrl);
-    menuPage = new MenuPage(page);
-    cartPreview = new CartPreviewComponent(page);
+  
+  test.beforeEach(async ({ menuPage }) => {
+    await menuPage.navigate();
+    await menuPage.waitForVisible();
   });
 
   test("cart preview initially hidden", async () => {
     await expect(cartPreview.cartPreviewElement).toBeHidden();
   });
 
-  test("cart preview is showed on hover", async () => {
+  test("cart preview is showed on hover", async ({menuPage}) => {
     await menuPage.addCoffeeToCart("Espresso");
     await menuPage.showCheckout();
     await expect(cartPreview.cartPreviewElement).toBeVisible();
   });
 
-  test("remove item from cart when quantity reaches zero", async () => {
+  test("remove item from cart when quantity reaches zero", async ({menuPage}) => {
     const itemName = "Espresso";
     await menuPage.addCoffeeToCart(itemName);
     await cartPreview.decreaseItemQuantity(itemName);

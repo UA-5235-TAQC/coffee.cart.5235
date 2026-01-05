@@ -17,7 +17,7 @@ export class AddToCartModal extends Base {
      * Clicks the accept button inside the modal
      */
     async accept(): Promise<void> {
-        await this.waitForVisible(); 
+        await this.acceptButton.waitFor({ state: 'visible' });
         await this.acceptButton.click();
     }
 
