@@ -16,10 +16,11 @@ test.describe("TC-24: Promo logic & cart management", () => {
     test("Functional test of promo + cart + payment flow", async ({ menuPage, cartPage }) => {
 
         // Step 1: Add 3 Espresso
+        const espressoName = CoffeeTypes.Espresso.en;
         for (let i = 0; i < 3; i++) {
-            await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
+            await menuPage.addCoffeeToCart(espressoName);
         }
-        const espressoPrice = await menuPage.getCoffeeItem(CoffeeTypes.Espresso.en).getPrice();
+        const espressoPrice = await menuPage.getCoffeeItem(espressoName).getPrice();
 
         const amountOfEspresso = 3;
         const espressoTotal = espressoPrice * amountOfEspresso;
@@ -32,20 +33,27 @@ test.describe("TC-24: Promo logic & cart management", () => {
 
         // Step 2: Accept the promo offer
         await menuPage.showPromoModal();
+        await menuPage.promoModal.waitForVisible();
+        const ingredients = await menuPage.promoModal.getIngredients();
+        expect(ingredients).toEqual(['espresso', 'chocolate syrup', 'steamed milk', 'whipped cream']);
+
+        const mochaPrice = await menuPage.promoModal.getPromoPrice();
+
         await menuPage.promoModal.acceptPromo();
         await menuPage.promoModal.waitForHidden();
         expect(await menuPage.getItemCount()).toBe(4);
-        const mochaPrice = 4;
+
         const expectedPromoTotal = espressoTotal + mochaPrice;
         expect(await menuPage.getTotalBtnPrice()).toBe(expectedPromoTotal);
 
         // Step 3: Add 2 Cappuccino
+        const cappuccinoName = CoffeeTypes.Cappuccino.en;
         for (let i = 0; i < 2; i++) {
-            await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
+            await menuPage.addCoffeeToCart(cappuccinoName);
         }
         expect(await menuPage.getItemCount()).toBe(6);
 
-        const cappuccinoPrice = await menuPage.getCoffeeItem(CoffeeTypes.Cappuccino.en).getPrice();
+        const cappuccinoPrice = await menuPage.getCoffeeItem(cappuccinoName).getPrice();
         let amountOfCappuccino = 2;
         let cappuccinoTotal = cappuccinoPrice * amountOfCappuccino;
         const expectedTotal = expectedPromoTotal + cappuccinoTotal;
@@ -59,7 +67,7 @@ test.describe("TC-24: Promo logic & cart management", () => {
         const items = await cartPage.getItemsList();
         expect(items.length).toBe(3);
 
-        const cartEspressoItem = await cartPage.getItemByName(CoffeeTypes.Espresso.en);
+        const cartEspressoItem = await cartPage.getItemByName(espressoName);
         await expect(cartEspressoItem.container).toBeVisible();
 
         const cartEspressoItemQuantity = await cartEspressoItem.getQuantity();
@@ -68,7 +76,7 @@ test.describe("TC-24: Promo logic & cart management", () => {
         expect(cartEspressoItemQuantity).toBe(amountOfEspresso);
         expect(cartEspressoItemTotalPrice).toBe(espressoTotal);
 
-        const cartCappuccinoItem = await cartPage.getItemByName(CoffeeTypes.Cappuccino.en);
+        const cartCappuccinoItem = await cartPage.getItemByName(cappuccinoName);
         await expect(cartCappuccinoItem.container).toBeVisible();
 
         const cartCappuccinoItemQuantity = await cartCappuccinoItem.getQuantity();
@@ -99,29 +107,28 @@ test.describe("TC-24: Promo logic & cart management", () => {
         expect(cartItemTotalPriceAfterIncrease).toBe(cappuccinoTotal);
 
         // Step 6: Delete all Cappuccino
-        for (let i = 0; i < amountOfCappuccino; i++) {
-            await cartCappuccinoItem.decreaseQuantity();
-        }
+        await cartCappuccinoItem.decreaseQuantityBy(amountOfCappuccino);
         const updatedItems = await cartPage.getItemsList();
         expect(updatedItems.length).toEqual(2);
         await expect(async () => {
-            await cartPage.getItemByName(CoffeeTypes.Cappuccino.en);
+            await cartPage.getItemByName(cappuccinoName);
         }).rejects.toThrow(
-            `Item with name "${CoffeeTypes.Cappuccino.en}" not found in the cart.`
+            `Item with name "${cappuccinoName}" not found in the cart.`
         );
         expect(await cartPage.getTotalPrice()).toBe(expectedPromoTotal);
 
         // Step 7: Open Payment Form
-        const paymentModal = await menuPage.showPaymentModal();
+        await menuPage.showPaymentModal();
+        const paymentModal = menuPage.paymentModal;
         await paymentModal.waitForVisible();
         expect(await paymentModal.isVisible()).toBe(true);
 
-        // Steps 8: Enter valid name
-        const promoData = TestDataBuilder.validPaymentDetailsYaroslav();
+        // Step 8: Enter valid name
+        const promoData = TestDataBuilder.validPaymentDetailsAlternative();
         await paymentModal.enterName(promoData.name);
         expect(await paymentModal.getNameValue()).toBe(promoData.name);
 
-        // Steps 9: Enter valid email
+        // Step 9: Enter valid email
         await paymentModal.enterEmail(promoData.email);
         expect(await paymentModal.getEmailValue()).toBe(promoData.email);
 

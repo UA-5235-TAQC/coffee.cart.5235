@@ -3,9 +3,9 @@
  */
 export class TestDataBuilder {
     /**
-     * Returns valid payment details for successful checkout (Yaroslav)
+     * Returns valid payment details for successful checkout (alternative dataset)
      */
-    static validPaymentDetailsYaroslav() {
+    static validPaymentDetailsAlternative() {
         return {
             name: 'Yaroslav',
             email: 'yaroslav@gmail.com',
