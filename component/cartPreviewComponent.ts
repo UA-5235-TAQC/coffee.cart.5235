@@ -2,7 +2,6 @@ import { Page, Locator } from "@playwright/test";
 import { Base } from "../Base";
 
 export class CartPreviewComponent extends Base {
-
     protected cartPreviewContainer: Locator;
     protected cartItems: Locator;
 
@@ -12,17 +11,17 @@ export class CartPreviewComponent extends Base {
         this.cartItems = this.cartPreviewContainer.locator("li.list-item");
     }
 
-    isVisible(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async isVisible(): Promise<boolean> {
+        return await this.cartPreviewContainer.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async waitForVisible(): Promise<void> {
+        await this.cartPreviewContainer.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async waitForHidden(): Promise<void> {
+        await this.cartPreviewContainer.waitFor({ state: 'hidden' });
     }
 
-    get cartPreviewElement() {
+    public get getCartPreview():Locator {
         return this.cartPreviewContainer;
     }
 
