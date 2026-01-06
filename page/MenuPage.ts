@@ -51,8 +51,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name}`) })
+            has: this.page.locator(`[data-test="${dataTestValue}"]`)
         });
 
         return new CoffeeCartComponent(itemLocator);
@@ -111,5 +112,13 @@ export class MenuPage extends BasePage {
 
     public get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+
+    get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
     }
 }
