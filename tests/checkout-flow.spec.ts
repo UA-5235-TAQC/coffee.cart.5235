@@ -57,7 +57,7 @@ test.describe("Checkout and Promo Flow Tests", () => {
     await menuPage.successSnackbar.waitForHidden();
     expect(await menuPage.getItemCount()).toBe(0);
   });
-  
+
   test("TC-14 - Promo modal appears after every 3 items added to cart", async ({
     menuPage,
     page,
@@ -110,28 +110,24 @@ test.describe("Checkout and Promo Flow Tests", () => {
     await menuPage.clickCartLink();
 
     //1st item: increase quantity by 1
-    const firstItem = await cartPage.getItemByName(coffees[0]);
-    expect(firstItem).not.toBeNull();
-    await firstItem!.increaseQuantity();
-    expect(await firstItem!.getQuantity()).toBe(3);
+    const firstItem = (await cartPage.getItemByName(coffees[0]))!;
+    await firstItem.increaseQuantity();
+    expect(await firstItem.getQuantity()).toBe(3);
 
     // 2nd item: decrease quantity
-    const secondItem = await cartPage.getItemByName(coffees[1]);
-    expect(secondItem).not.toBeNull();
-    await secondItem!.decreaseQuantity();
-    expect(await secondItem!.getQuantity()).toBe(1);
+    const secondItem = (await cartPage.getItemByName(coffees[1]))!;
+    await secondItem.decreaseQuantity();
+    expect(await secondItem.getQuantity()).toBe(1);
 
     // 3rd item: remove by decreasing to 0
-    const thirdItem = await cartPage.getItemByName(coffees[2]);
-    expect(thirdItem).not.toBeNull();
-    await thirdItem!.decreaseQuantity();
-    await thirdItem!.decreaseQuantity();
+    const thirdItem = (await cartPage.getItemByName(coffees[2]))!;
+    await thirdItem.decreaseQuantity();
+    await thirdItem.decreaseQuantity();
     expect(await cartPage.getItemByName(coffees[2])).toBeNull();
 
     // 4th item: remove directly
-    const fourthItem = await cartPage.getItemByName(coffees[3]);
-    expect(fourthItem).not.toBeNull();
-    await fourthItem!.removeFromCart();
+    const fourthItem = (await cartPage.getItemByName(coffees[3]))!;
+    await fourthItem.removeFromCart();
     expect(await cartPage.getItemByName(coffees[3])).toBeNull();
 
     // Get totals from cartPage
