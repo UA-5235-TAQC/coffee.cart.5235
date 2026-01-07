@@ -79,12 +79,12 @@ test.describe("Checkout and Promo Flow Tests", () => {
     // Right click modal (to add an item)
     await menuPage.showConfirmModal(coffee);
     await menuPage.confirmModal.accept();
-    await promoModal.waitForHidden();
 
     // Add next 3 items → promo modal appears again
     for (let i = 0; i < 3; i++) {
       await menuPage.addCoffeeToCart(coffee);
     }
+    await promoModal.waitForVisible();
     await promoModal.acceptPromo();
     expect(await menuPage.getItemCount()).toBe(10);
   });
@@ -109,7 +109,7 @@ test.describe("Checkout and Promo Flow Tests", () => {
 
     await menuPage.clickCartLink();
 
-    //1st item: increase quantity by 1
+    // 1st item: increase quantity by 1
     const firstItem = (await cartPage.getItemByName(coffees[0]))!;
     await firstItem.increaseQuantity();
     expect(await firstItem.getQuantity()).toBe(3);

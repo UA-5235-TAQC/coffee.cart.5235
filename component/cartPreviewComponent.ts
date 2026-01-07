@@ -21,7 +21,7 @@ export class CartPreviewComponent extends Base {
         await this.cartPreviewContainer.waitFor({ state: 'hidden' });
     }
 
-    public get getCartPreview():Locator {
+    public get cartPreviewElement(): Locator {
         return this.cartPreviewContainer;
     }
 

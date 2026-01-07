@@ -16,5 +16,5 @@ export default {
 };
 
 export const TIMEOUT = 5000;
-export const VALID_USER_NAME = "Yaroslav";
-export const VALID_USER_EMAIL = "valid@gmail.com";
+export const VALID_USER_NAME = "Test User";
+export const VALID_USER_EMAIL = "test@example.com";
