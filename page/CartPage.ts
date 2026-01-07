@@ -76,5 +76,8 @@ export class CartPage extends BasePage {
   async waitForVisible(): Promise<void> {
     await this.cartPageList.waitFor({ state: "visible" });
   }
-  async waitForHidden(): Promise<void> {}
+
+  async waitForHidden(): Promise<void> {
+    await this.cartPageList.waitFor({ state: "hidden" });
+  }
 }
