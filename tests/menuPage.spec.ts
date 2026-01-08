@@ -2,48 +2,44 @@ import { test, expect } from "../fixtures/fixturePage";
 import { CoffeeTypes } from "../data/CoffeeTypes";
 
 test.describe("MenuPage - Smoke Tests", () => {
-    test('Verify promo coffee popup shows up when adding every 3rd item to the cart', async ({menuPage, cartPage}) => {
-      const consoleErrors: string[] = [];
+    const consoleErrors: string[] = [];
 
-      test.beforeEach(async ({ page }) => {
-          consoleErrors.length = 0;
-          page.on('console', msg => {
+    test.beforeEach(async ({ page }) => {
+        consoleErrors.length = 0;
+        page.on('console', msg => {
             if (msg.type() === 'error') {
-              consoleErrors.push(`[${msg.type()}] ${msg.text()}`);
+                consoleErrors.push(`[${msg.type()}] ${msg.text()}`);
             }
-      });
+        });
 
-
-    page.on('pageerror', error => {
-        consoleErrors.push(`[Page Error] ${error.message}`);
+        page.on('pageerror', error => {
+            consoleErrors.push(`[Page Error] ${error.message}`);
+        });
     });
-});
 
-
-test('Verify no console errors occur when adding a product to cart', async ({ menuPage, cartPage }) => {
-    const americano = CoffeeTypes.Americano['en'];
-    // 1. Verify that the product list is displayed
-    await menuPage.navigate();
-    // 2. Verify that the Americano product is displayed in the product list
-    expect(await menuPage.getCoffeeItem(americano).isVisible()).toBe(true);
-    // 3. Verify that the Americano product price is displayed
-    expect(await menuPage.getCoffeeItem(americano).priceIsVisible()).toBe(true);
-    // 4. Note the displayed price of the Americano product
-    const americanoPrice = await menuPage.getCoffeeItem(americano).getPrice();
-    // 5. Click on the Americano cup in the product list
-    await menuPage.addCoffeeToCart(americano);
-    // 6. Verify the total price displayed on the main page
-    expect(await menuPage.getTotalBtnPrice()).toBeGreaterThan(0);
-    // 7. Open the cart
-    await menuPage.clickCartLink();
-    // 8. Verify cart contents
-    const cartItem = await cartPage.getItemByName(americano);
-    expect(cartItem, `Product ${americano} should be in the cart`).not.toBeNull();
-    expect(await cartItem!.getName()).toBe(americano);
-    expect(await cartItem!.getUnitPrice()).toBe(americanoPrice);
-    expect(consoleErrors, `Found console errors during test: ${consoleErrors.join(', ')}`).toHaveLength(0);
-});
-
+    test('Verify no console errors occur when adding a product to cart', async ({ menuPage, cartPage }) => {
+        const americano = CoffeeTypes.Americano['en'];
+        // 1. Verify that the product list is displayed
+        await menuPage.navigate();
+        // 2. Verify that the Americano product is displayed in the product list
+        expect(await menuPage.getCoffeeItem(americano).isVisible()).toBe(true);
+        // 3. Verify that the Americano product price is displayed
+        expect(await menuPage.getCoffeeItem(americano).priceIsVisible()).toBe(true);
+        // 4. Note the displayed price of the Americano product
+        const americanoPrice = await menuPage.getCoffeeItem(americano).getPrice();
+        // 5. Click on the Americano cup in the product list
+        await menuPage.addCoffeeToCart(americano);
+        // 6. Verify the total price displayed on the main page
+        expect(await menuPage.getTotalBtnPrice()).toBeGreaterThan(0);
+        // 7. Open the cart
+        await menuPage.clickCartLink();
+        // 8. Verify cart contents
+        const cartItem = await cartPage.getItemByName(americano);
+        expect(cartItem, `Product ${americano} should be in the cart`).not.toBeNull();
+        expect(await cartItem!.getName()).toBe(americano);
+        expect(await cartItem!.getUnitPrice()).toBe(americanoPrice);
+        expect(consoleErrors, `Found console errors during test: ${consoleErrors.join(', ')}`).toHaveLength(0);
+    });
 
     test('Verify promo coffee popup shows up when adding every 3rd item to the cart', async ({ menuPage, cartPage }) => {
         const coffee = CoffeeTypes.Espresso['en'];
@@ -91,4 +87,4 @@ test('Verify no console errors occur when adding a product to cart', async ({ me
         // 12. Verify cart contents
         expect(await cartPage.getTotalPrice()).toBe(coffePrice * 8 + await discountedPrice);
     });
-});
+})
