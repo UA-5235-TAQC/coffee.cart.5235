@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
+import { Base } from "../Base";
 
 export class CartItemComponent {
     protected _root: Locator;
@@ -66,15 +67,39 @@ export class CartItemComponent {
         await this.addOneButton.click();
     }
 
+    async increaseQuantityBy(times: number): Promise<void> {
+        for (let i = 0; i < times; i++) {
+            await this.increaseQuantity();
+        }
+    }
+
     async decreaseQuantity(): Promise<void> {
         await this.removeOneButton.click();
+    }
+
+    async decreaseQuantityBy(times: number): Promise<void> {
+        for (let i = 0; i < times; i++) {
+            await this.decreaseQuantity();
+        }
     }
 
     async removeFromCart(): Promise<void> {
         await this.deleteButton.click();
     }
 
-     get root(): Locator {
+    get root(): Locator {
         return this._root;
+    }
+
+    async isVisible(): Promise<boolean> {
+        return this.root.isVisible();
+    }
+
+    async waitForVisible(): Promise<void> {
+        await this.root.waitFor({ state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        await this.root.waitFor({ state: 'hidden' });
     }
 }
