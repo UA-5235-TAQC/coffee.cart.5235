@@ -3,7 +3,7 @@ import { parsePrice, parseQuantity } from "../utils";
 import { Base } from "../Base";
 
 export class CartItemComponent extends Base {
-    protected root: Locator;
+    protected _root: Locator;
     protected name: Locator;
     protected unitDescription: Locator;
     protected totalPrice: Locator;
@@ -11,16 +11,15 @@ export class CartItemComponent extends Base {
     protected removeOneButton: Locator;
     protected deleteButton: Locator;
 
-    constructor(root: Locator) {
-        super(root.page());
-
-        this.root = root;
-        this.name = this.root.locator("div >> nth=0"); // item name is the 1st div in the row
-        this.unitDescription = this.root.locator(".unit-desc");
-        this.totalPrice = this.root.locator("div >> nth=3"); // total price is the 4th div in the row
-        this.addOneButton = this.root.locator("button[aria-label^=\"Add one\"]");
-        this.removeOneButton = this.root.locator("button[aria-label^=\"Remove one\"]");
-        this.deleteButton = this.root.locator("button.delete");
+    constructor(_root: Locator) {
+        super(_root.page());
+        this._root = _root;
+        this.name = this._root.locator("div >> nth=0"); // item name is the 1st div in the row
+        this.unitDescription = this._root.locator(".unit-desc");
+        this.totalPrice = this._root.locator("div >> nth=3"); // total price is the 4th div in the row
+        this.addOneButton = this._root.locator("button[aria-label^=\"Add one\"]");
+        this.removeOneButton = this._root.locator("button[aria-label^=\"Remove one\"]");
+        this.deleteButton = this._root.locator("button.delete");
     }
 
     async getName(): Promise<string> {
@@ -89,6 +88,10 @@ export class CartItemComponent extends Base {
         await this.deleteButton.click();
     }
 
+    get root(): Locator {
+       return this._root;
+    }
+  
     async isVisible(): Promise<boolean> {
         return this.root.isVisible();
     }
@@ -99,9 +102,5 @@ export class CartItemComponent extends Base {
 
     async waitForHidden(): Promise<void> {
         await this.root.waitFor({ state: 'hidden' });
-    }
-
-    get container(): Locator {
-        return this.root;
     }
 }
