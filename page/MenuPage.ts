@@ -153,4 +153,12 @@ export class MenuPage extends BasePage {
         }
         return coffeeItems;
     }
+
+    public get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    public get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
+    }
 }

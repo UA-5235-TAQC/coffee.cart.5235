@@ -9,7 +9,11 @@ export class StringUtils {
         return isNaN(result) ? 0 : result;
     }
 
-    // Converts a name to a data-test attribute value by replacing spaces with underscores
+    /**
+     * Converts a name to a data-test attribute value by replacing spaces with underscores.
+     * @param name The input string to convert.
+     * @returns The converted string suitable for use as a data-test attribute.
+     */
     static nameToDataTest(name: string): string {
         return name.replace(/ /g, '_');
     }
