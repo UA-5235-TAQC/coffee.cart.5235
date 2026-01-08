@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 
-test('Verify console error is thrown when adding a product to cart', async ({ menuPage, cartPage }) => {
+test('Verify no console errors occur when adding a product to cart', async ({ menuPage, cartPage }) => {
     const americano = CoffeeTypes.Americano['en'];
     // 1. Verify that the product list is displayed
     await menuPage.navigate();
