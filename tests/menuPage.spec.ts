@@ -91,6 +91,6 @@ test.describe("MenuPage - Smoke Tests", () => {
         expect(await cartPage.isVisible()).toBe(true);
         expect(await cartPage.getItemCount()).toBe(9);
         // 12. Verify cart contents
-        expect(await cartPage.getTotalPrice()).toBe(coffePrice * 8 + await discountedPrice)
+        expect(await cartPage.getTotalPrice()).toBe(coffePrice * 8 + await discountedPrice);
     });
 });
