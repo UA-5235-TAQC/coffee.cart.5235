@@ -1,20 +1,37 @@
 import { Locator, Page } from "@playwright/test";
+import { StringUtils } from '../utils/stringUtils';
+import { Base } from '../Base';
 
-export abstract class BasePage {
-    public page: Page;
+export abstract class BasePage extends Base {
     protected menuPageLink: Locator;
     protected cartPageLink: Locator;
     protected gitHubPageLink: Locator;
-    protected title: Locator;
 
     constructor(page: Page) {
-        this.page = page;
-        this.menuPageLink = page.getByRole("link", { name: "Menu" });
-        this.cartPageLink = page.getByRole("link", { name: "Cart" });
-        this.gitHubPageLink = page.getByRole("link", { name: "GitHub" });
-        this.title = page.locator("xpath=/html/head/title");
+        super(page);
+        this.menuPageLink = page.getByLabel("Menu page");
+        this.cartPageLink = page.getByLabel("Cart page");
+        this.gitHubPageLink = page.getByLabel("GitHub page");
     }
-    async clickMenuLink () {
+
+    async navigate(path: string = "/"): Promise<void> {
+        await this.page.goto(path);
+    }
+
+    async isVisible(): Promise<boolean> {
+        return await this.page.isVisible('body');
+
+    }
+
+    async waitForVisible(): Promise<void> {
+        await this.page.waitForSelector('body', { state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        await this.page.waitForSelector('body', { state: 'hidden' });
+    }
+
+    async clickMenuLink() {
         await this.menuPageLink.click();
     }
     async clickCartLink() {
@@ -24,8 +41,16 @@ export abstract class BasePage {
         await this.gitHubPageLink.click();
     }
     async getTitleText() {
-        return await this.title.textContent();
+        return await this.page.title();
     }
 
-    abstract navigate(): Promise<void>;
+    public get instance(): Page {
+        //getter for Page object
+        return this.page;
+    }
+
+    async getItemCount(): Promise<number> {
+        const text = await this.cartPageLink.textContent();
+        return StringUtils.extractNumbers(text ?? "0");
+    }
 }
