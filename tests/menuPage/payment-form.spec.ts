@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
-import {CoffeeTypes} from "../../data";
 import {test} from "../../fixtures/fixturePage";
 import {TestDataBuilder} from "../../data";
+import { CoffeeTypes } from "../../data/CoffeeTypes";
 
 test.describe('TC-23: Payment Form Validation', () => {
 

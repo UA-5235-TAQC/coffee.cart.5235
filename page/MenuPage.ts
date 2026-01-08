@@ -8,7 +8,7 @@ import {
     SuccessSnackbarComponent, CartPreviewComponent
 } from "../component";
 import {StringUtils} from "../utils/stringUtils";
-import {CoffeeValue, CoffeeTypes} from "../data";
+import {CoffeeValue, CoffeeTypes} from "../data/CoffeeTypes";
 
 export class MenuPage extends BasePage {
     protected ConfirmModal: AddToCartModal;
@@ -26,7 +26,7 @@ export class MenuPage extends BasePage {
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this._totalBtn = page.getByRole('button', {name: 'Proceed to checkout'});
+        this._totalBtn = this.page.locator('[data-test="checkout"]');
         this.itemsList = page.locator('ul');
     }
 
@@ -39,9 +39,11 @@ export class MenuPage extends BasePage {
     }
 
     async waitForVisible(): Promise<void> {
+        await this._totalBtn.waitFor({state: 'visible'});
     }
 
     async waitForHidden(): Promise<void> {
+        await this._totalBtn.waitFor({state: 'hidden'});
     }
 
     async getTotalBtnText(): Promise<string> {
@@ -83,7 +85,7 @@ export class MenuPage extends BasePage {
     async showConfirmModal(): Promise<void>;
     async showConfirmModal(coffee: CoffeeValue): Promise<void>;
 
-    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee 
+    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee
         let coffeeName: CoffeeValue;
         if (coffee) {
             coffeeName = coffee;
@@ -120,19 +122,15 @@ export class MenuPage extends BasePage {
         await this._totalBtn.hover();
     }
 
-    get promoModal(): PromoModal {
+    public get promoModal(): PromoModal {
         return this.PromoModal;
     }
 
-    get totalBtn(): Locator {
-        return this._totalBtn;
-    }
-
-    get paymentModal(): PaymentDetailsModalComponent {
+    public get paymentModal(): PaymentDetailsModalComponent {
         return this.PaymentModal;
     }
 
-    get successSnackbar(): SuccessSnackbarComponent {
+    public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
     }
 }
