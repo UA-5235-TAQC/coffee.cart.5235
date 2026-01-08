@@ -123,7 +123,11 @@ export class MenuPage extends BasePage {
         return this.PromoModal;
     }
 
-    get successSnackbar(): SuccessSnackbarComponent {
+    public get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
     }
 }
