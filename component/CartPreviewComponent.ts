@@ -2,7 +2,6 @@ import { Page, Locator } from "@playwright/test";
 import { Base } from "../Base";
 
 export class CartPreviewComponent extends Base {
-
     protected root: Locator;
     protected cartItems: Locator;
 

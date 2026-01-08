@@ -5,6 +5,7 @@ import { CoffeeValue } from "../data/CoffeeTypes";
 
 
 export class CartPage extends BasePage {
+    private _root: Locator;
     private totalQuantity: Locator;
     private emptyCartMessage: Locator;
     private cartItem: Locator;
@@ -13,6 +14,7 @@ export class CartPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+        this._root = this.page.locator('div.list').first();
         this.totalQuantity = this.page.getByRole("link", { name: "Cart" })
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
@@ -90,5 +92,9 @@ export class CartPage extends BasePage {
 
     get itemList(): Locator {
         return this.cartItemList;
+    }
+
+    get root(): Locator {
+        return this._root;
     }
 }
