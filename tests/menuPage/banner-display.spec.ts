@@ -1,7 +1,7 @@
-import { test, expect } from "../../fixtures/fixturePage";
+import {test, expect} from "../../fixtures/fixturePage";
 import {CoffeeTypes} from "../../data/CoffeeTypes";
 import {PaymentDetailsModalComponent} from "../../component";
-import {expectLobsterFont} from "../../utils/styleUtils";
+import {evaluateLobsterFont, expectLobsterFont} from "../../utils/styleUtils";
 
 test.describe("TC-25: Promo banner & theme persistence via URL parameter", () => {
 
@@ -10,18 +10,13 @@ test.describe("TC-25: Promo banner & theme persistence via URL parameter", () =>
         await menuPage.navigate();
 
         // Check Lobster font is NOT applied initially
-        const initialStyleExists = await menuPage.instance.evaluate(() =>
-            Array.from(document.querySelectorAll("style")).some(s =>
-                s.innerText.includes("font-family: 'Lobster'")
-            )
-        );
+        const initialStyleExists = await evaluateLobsterFont(menuPage.instance);
         expect(initialStyleExists).toBe(false);
 
         // Step 1: Navigate with ad parameter
         await menuPage.navigate("/?ad=1");
         const styleExistsAfter = await expectLobsterFont(menuPage.instance);
         expect(styleExistsAfter).toBe(true);
-
 
         // Step 2: Verify main page elements are visible
         const promoBanner = menuPage.instance.locator('img[alt*="free 1 bag of coffe beans"]');

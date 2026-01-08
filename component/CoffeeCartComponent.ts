@@ -83,9 +83,6 @@ export class CoffeeCartComponent {
         return this.root.isVisible();
     }
 
-    /**
-     * Checks whether the price label is visible.
-     */
     async priceIsVisible(): Promise<boolean> {
         return this.priceLabel.isVisible();
     }
