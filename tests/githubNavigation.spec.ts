@@ -6,7 +6,7 @@ test.describe("GitHub navigation", () => {
         await menuPage.navigate();
         await menuPage.waitForVisible();
     });
-    test('TC-37: Header GitHub link -> internal page -> external repo', async ({
+    test('TC-37: should navigate from header GitHub link to external repository via internal GitHub page', async ({
         page,
         menuPage,
         gitHubPage,
