@@ -26,7 +26,7 @@ export class MenuPage extends BasePage {
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this.totalBtn = page.getByLabel('Proceed to checkout');
+        this.totalBtn = this.page.locator('[data-test="checkout"]');
         this.itemsList = page.locator('ul');
     }
 
@@ -43,8 +43,13 @@ export class MenuPage extends BasePage {
         }
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.totalBtn.waitFor({ state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        await this.totalBtn.waitFor({ state: 'hidden' });
+    }
 
     async getTotalBtnText(): Promise<string> {
         const text = await this.totalBtn.textContent();
@@ -56,6 +61,7 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
+        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
             has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$`) })
         });
@@ -108,13 +114,25 @@ export class MenuPage extends BasePage {
         }
     }
 
-    async showPaymentModal(): Promise<void> {
+    async showPaymentModal(): Promise<PaymentDetailsModalComponent> {
+        await this.totalBtn.waitFor({state: 'visible', timeout: 5000});
+        await this.totalBtn.scrollIntoViewIfNeeded();
         await this.totalBtn.click();
+        await this.PaymentModal.waitForVisible();
+        return this.PaymentModal;
     }
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
     public get promoModal(): PromoModal {
         return this.PromoModal;
+    }
+
+    public get paymentModal(): PaymentDetailsModalComponent {
+        return this.PaymentModal;
+    }
+
+    public get successSnackbar(): SuccessSnackbarComponent {
+        return this.SuccessSnackbar;
     }
 }

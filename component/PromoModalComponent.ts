@@ -1,12 +1,15 @@
 import { Page, Locator } from '@playwright/test';
 import { Base } from '../Base';
 import { StringUtils } from '../utils/stringUtils';
+import { getIngredientsFromLocator } from "../utils/domUtils";
 
 export class PromoModal extends Base {
     protected root: Locator;
     protected acceptButton: Locator;
     protected skipButton: Locator;
     protected promoTextSpan: Locator;
+    protected promoCup: Locator;
+    private ingredients: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -14,6 +17,8 @@ export class PromoModal extends Base {
         this.acceptButton = page.getByRole('button', { name: 'Yes, of course!' });
         this.skipButton = page.getByRole('button', { name: "Nah, I'll skip." });
         this.promoTextSpan = this.root.locator('span').filter({ hasText: "It's your lucky day!" });
+        this.promoCup = this.root.locator('.cup-body');
+        this.ingredients = this.promoCup.locator('.ingredient');
     }
 
     async acceptPromo() {
@@ -30,18 +35,18 @@ export class PromoModal extends Base {
     }
 
     async isVisible(): Promise<boolean> {
-        try {
-            await this.root.waitFor({ state: 'visible', timeout: 1000});
-            return true;
-        } catch {
-            return false;
-        }
+        return this.root.isVisible();
     }
-    
+
     async waitForVisible(): Promise<void> {
         await this.root.waitFor({ state: 'visible' });
     }
+
     async waitForHidden(): Promise<void> {
         await this.root.waitFor({ state: 'hidden' });
+    }
+
+    async getIngredients(): Promise<string[]> {
+        return getIngredientsFromLocator(this.ingredients);
     }
 }
