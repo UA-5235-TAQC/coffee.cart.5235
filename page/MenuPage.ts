@@ -119,15 +119,23 @@ export class MenuPage extends BasePage {
 
     async showCheckout(): Promise<void> { await this.totalBtn.hover(); }
 
-    public get promoModal(): PromoModal {
+    get promoModal(): PromoModal {
         return this.PromoModal;
     }
 
-    public get paymentModal(): PaymentDetailsModalComponent {
+    get paymentModal(): PaymentDetailsModalComponent {
         return this.PaymentModal;
     }
 
-    public get successSnackbar(): SuccessSnackbarComponent {
+    get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
+    }
+
+    public totalButton(): Locator {
+        return this.totalBtn;
+    }
+
+    async reloadPage(): Promise<void> {
+        await this.page.reload();
     }
 }

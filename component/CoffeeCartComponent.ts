@@ -79,6 +79,14 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
+    /**
+     * Performs a single left-click on the coffee title header element.
+     * This simulates a standard user click on the coffee name.
+     */
+    async clickName(): Promise<void> {
+        await this.nameHeader.click();
+    }
+
     async isVisible(): Promise<boolean> {
         return this.root.isVisible();
     }
