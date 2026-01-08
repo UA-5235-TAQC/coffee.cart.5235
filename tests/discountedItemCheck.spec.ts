@@ -27,7 +27,7 @@ test.describe('Checking the possibility of unauthorized addition of several unit
         await menuPage.clickCartLink();
         await cartPage.waitForVisible();
 
-        const discountedMocha = await cartPage.getItemByName('(Discounted) Mocha');
+        const discountedMocha = await cartPage.getItemByName(CoffeeTypes.Mocha.en);
         expect(discountedMocha).not.toBeNull();
 
         for (let i = 0; i < 5; i++) {
