@@ -78,4 +78,12 @@ export class CoffeeCartComponent {
         const ingredients = await this.getIngredients();
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
+
+    async isVisible(): Promise<boolean> {
+        return this.root.isVisible();
+    }
+
+    async priceIsVisible(): Promise<boolean> {
+        return this.priceLabel.isVisible();
+    }
 }
