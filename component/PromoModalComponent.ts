@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
 import { Base } from '../Base';
 import { StringUtils } from '../utils/stringUtils';
-import {getIngredientsFromLocator} from "../utils/domUtils";
+import { getIngredientsFromLocator } from "../utils/domUtils";
 
 export class PromoModal extends Base {
     protected root: Locator;

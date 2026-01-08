@@ -1,10 +1,11 @@
-import {Locator} from '@playwright/test';
+import { Locator } from '@playwright/test';
+import { Base } from '../Base';
 import { getIngredientsFromLocator } from '../utils/domUtils';
 
 /**
  * Represents the coffee card component on the menu page.
  */
-export class CoffeeCartComponent {
+export class CoffeeCartComponent extends Base {
     private root: Locator;
     private nameHeader: Locator;
     private priceLabel: Locator;
@@ -12,8 +13,8 @@ export class CoffeeCartComponent {
     private ingredients: Locator;
 
     constructor(root: Locator) {
+        super(root.page());
         this.root = root;
-
         this.nameHeader = this.root.locator('h4');
         this.priceLabel = this.root.locator('h4 small');
 
@@ -80,10 +81,28 @@ export class CoffeeCartComponent {
     }
 
     async isVisible(): Promise<boolean> {
-        return this.root.isVisible();
+         try {
+            await this.root.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     async priceIsVisible(): Promise<boolean> {
-        return this.priceLabel.isVisible();
+         try {
+            await this.priceLabel.waitFor({ state: 'visible' });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    waitForVisible(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+  
+    waitForHidden(): Promise<void> {
+        throw new Error('Method not implemented.');
     }   
 }
