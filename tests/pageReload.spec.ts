@@ -1,38 +1,30 @@
-import { test, expect } from "@playwright/test";
-import { MenuPage } from "../page/MenuPage";
-import env from "../config/env";
-import { CartPreviewComponent } from "../component/CartPreviewComponent";
+import { test, expect } from "../fixtures/fixturePage";
 import { CoffeeTypes } from "../data/CoffeeTypes";
+import { CartPreviewComponent } from "../component/CartPreviewComponent";
 
 test.describe("Page reload - Cart items persistence", () => {
-    let cartPreview: CartPreviewComponent;
-    let menuPage: MenuPage;
-    const baseClientUrl = env.BASE_CLIENT_URL;
-
-    test.beforeEach(async ({ page }) => {
-        await page.goto(baseClientUrl);
-        menuPage = new MenuPage(page);
-        cartPreview = new CartPreviewComponent(page);
-    });
 
 
-    test("the cart items are saved when the page is reloaded", async ({ page }) => {
-        const itemName = CoffeeTypes.Espresso.en;
+    test("the cart items are saved when the page is reloaded", async ({ page, menuPage, cartPage }) => {
+        await menuPage.navigate();
+        await expect(cartPage.getTotalQuantity()).resolves.toBe(0);
 
+        const itemName = CoffeeTypes.EspressoConPanna.en;
+
+        // add item
         await menuPage.addCoffeeToCart(itemName);
 
-        // cart page
-        await page.goto(`${baseClientUrl}/cart`);
-        await page.reload();
+        // go to cart & reload
+        await cartPage.navigate();
+        await cartPage.reload();
 
-        await expect(
-            page.locator('li.list-item', { hasText: itemName })
-        ).toHaveCount(1);
+        await expect(cartPage.getTotalQuantity()).resolves.toBe(1);
 
         // back to menu
-        await page.goto(baseClientUrl);
+        await menuPage.navigate();
         await menuPage.showCheckout();
 
+        const cartPreview = new CartPreviewComponent(page);
         await expect(cartPreview.getCartItem(itemName)).toHaveCount(1);
     });
 });
