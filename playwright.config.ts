@@ -28,6 +28,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
     baseURL: 'https://coffee-cart.app', // After setting baseURL, tests can use relative URLs (e.g. page.goto('/')) instead of full URLs
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     headless: process.env.HEADLESS ? process.env.HEADLESS === 'true' : false,

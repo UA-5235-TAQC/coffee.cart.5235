@@ -29,7 +29,10 @@ export class CartPage extends BasePage {
         const all = await this.cartItem.all();
 
         for (const item of all) {
-            itemList.push(new CartItemComponent(item));
+            const classAttr = await item.getAttribute('class');
+            if (classAttr !== 'list-header') {
+                itemList.push(new CartItemComponent(item));
+            }
         }
 
         return itemList;
