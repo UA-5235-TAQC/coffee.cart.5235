@@ -26,7 +26,7 @@ test.describe("Add to Cart - Performance Tests", () => {
 
         const durations: number[] = [];
 
-        // Додаємо перші 7 предметів
+        //add the first 7 items
         for (let i = 0; i < 7; i++) {
             const start = performance.now();
             await menuPage.getCoffeeItem(coffees[i]).clickAdd();
@@ -34,12 +34,12 @@ test.describe("Add to Cart - Performance Tests", () => {
             durations.push(duration);
         }
 
-        // Додаємо 8-й предмет
+        // add the 8th item
         const startSlow = performance.now();
         await menuPage.getCoffeeItem(coffees[7]).clickAdd();
         const slowDuration = performance.now() - startSlow;
 
-        // Перевірка, що 8-й предмет додавався повільніше, ніж середній час 7 попередніх
+        // Verify that the 8th item was added slower than the average time of the previous 7
         const avgFastDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
         expect(slowDuration).toBeGreaterThan(avgFastDuration);
     });
