@@ -51,13 +51,12 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
-        const itemLocator = this.page.locator(
-            `.cup-body[data-test="${name.replaceAll(' ', '_')}"]`
-        ).locator('..'); // піднімаємось до li
+        const itemLocator = this.itemsList.locator('li').filter({
+            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$`) })
+        });
 
         return new CoffeeCartComponent(itemLocator);
     }
-
 
     async addCoffeeToCart(): Promise<void>;
     async addCoffeeToCart(coffee: CoffeeValue): Promise<void>;
