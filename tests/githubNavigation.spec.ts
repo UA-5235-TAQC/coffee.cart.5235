@@ -13,7 +13,7 @@ test.describe("GitHub navigation", () => {
     }) => {
         await menuPage.clickGitHubLink();
 
-        await expect(gitHubPage.isOpened()).resolves.toBeTruthy();
+        await expect(await gitHubPage.isOpened()).toBe(true);
 
         const repoLink = page.locator('a', { hasText: 'jecfish/coffee-cart' });
         await expect(repoLink).toBeVisible();
