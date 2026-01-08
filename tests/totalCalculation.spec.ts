@@ -1,21 +1,13 @@
-import { test, expect } from "@playwright/test";
-import { MenuPage } from "../page/MenuPage";
-import { CartPage } from "../page/CartPage";
+import { test, expect } from "../fixtures/fixturePage";
 import { CoffeeTypes } from "../data/CoffeeTypes";
 
 test.describe("Coffee Cart - Total Calculation", () => {
-    let menuPage: MenuPage;
-    let cartPage: CartPage;
 
-    test.beforeEach(async ({ page }) => {
-        menuPage = new MenuPage(page);
-        cartPage = new CartPage(page);
+    test.beforeEach(async ({ menuPage }) => {
         await menuPage.navigate();
     });
 
-    test("valid calculation of total after adding multiple coffee types", async () => {
-
-
+    test("valid calculation of total after adding multiple coffee types", async ({ menuPage }) => {
         await menuPage.addCoffeeToCart(CoffeeTypes.Espresso.en);
         await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
 
