@@ -9,7 +9,7 @@ import { CartPreviewComponent } from "../component";
 import { DISCOUNTED_COFFEE, VALID_EMAIL_1, VALID_NAME_1 } from "../config/env";
 
 
-test.describe('Test suit by - Yaroslav Prokhorenko', () => { 
+test.describe('Test suite by - Yaroslav Prokhorenko', () => { 
     
     test('Test case #34 - Verify Payment details form allows submission \
         with Name in Cyrillic', async ({ menuPage, page }) => {
@@ -80,7 +80,7 @@ test.describe('Test suit by - Yaroslav Prokhorenko', () => {
         await checkout.waitForHidden();
     
         // Verify no confirmation message occur and payment modal is closed
-        expect(await checkout.isVisible()).toBeFalsy()
+        expect(await checkout.isVisible()).toBeFalsy();
         expect(await confirmation.isVisible()).toBeFalsy();
     
         // Re-open the modal and verify data and state remains unchanged
@@ -102,10 +102,10 @@ test.describe('Test suit by - Yaroslav Prokhorenko', () => {
         await menuPage.waitForVisible();
         
         // Add 3 items 
-        for (let i = 0; i < 3; i ++ ) {
-            await coffee.hoverItem();
+        for (let i = 0; i < 3; i++) {
+            await coffee.hoverItem(); 
             await coffee.rightClick();   
-            await addModal.waitForVisible()     
+            await addModal.waitForVisible();     
             await addModal.accept();
         }
     
@@ -124,30 +124,30 @@ test.describe('Test suit by - Yaroslav Prokhorenko', () => {
     
     test('Test case #29 - Verify cart link in header displays \
         correct total item count', async ({ menuPage, page}) => {
-        const coffe1 = CoffeeTypes.Espresso.en;
-        const coffe2 = CoffeeTypes.EspressoMacchiato.en;
+        const coffee1 = CoffeeTypes.Espresso.en;
+        const coffee2 = CoffeeTypes.EspressoMacchiato.en;
         const preview = new CartPreviewComponent(page);
     
         await menuPage.navigate();
         await menuPage.waitForVisible();
         
         // Add 1 coffe
-        await menuPage.addCoffeeToCart(coffe1);    
+        await menuPage.addCoffeeToCart(coffee1);    
         expect(await menuPage.getItemCount()).toBe(1);
     
         // Add 2 more coffee
-        await menuPage.addCoffeeToCart(coffe1);
-        await menuPage.addCoffeeToCart(coffe1);
+        await menuPage.addCoffeeToCart(coffee1);
+        await menuPage.addCoffeeToCart(coffee1);
         expect(await menuPage.getItemCount()).toBe(3);
     
         // Add 2 more cups different coffee
-        await menuPage.addCoffeeToCart(coffe2);
-        await menuPage.addCoffeeToCart(coffe2);
+        await menuPage.addCoffeeToCart(coffee2);
+        await menuPage.addCoffeeToCart(coffee2);
         expect(await menuPage.getItemCount()).toBe(5);
     
         // Remove 1 coffee
         await menuPage.showCheckout();
-        await preview.decreaseItemQuantity(coffe2);
+        await preview.decreaseItemQuantity(coffee2);
         expect(await menuPage.getItemCount()).toBe(4);    
     });    
     
@@ -156,17 +156,17 @@ test.describe('Test suit by - Yaroslav Prokhorenko', () => {
         async ({ menuPage, page, cartPage }) => {
 
         const addPromo = new PromoModal(page);
-        const coffee1 = CoffeeTypes.Americano.en
-        const coffee2 = CoffeeTypes.Cappuccino.en
-        const coffee3 = CoffeeTypes.FlatWhite.en
+        const coffee1 = CoffeeTypes.Americano.en;
+        const coffee2 = CoffeeTypes.Cappuccino.en;
+        const coffee3 = CoffeeTypes.FlatWhite.en;
     
         // Trigger promo function
         async function promoTrigger(item: CoffeeValue) {
-            for (let i = 0; i < 3; i++ ) {
+            for (let i = 0; i < 3; i++) {
                 await menuPage.addCoffeeToCart(item);
                 let count = await menuPage.getItemCount();
                 if (count % 3 === 0) {
-                    break
+                    break;
                 };           
             };          
         };
@@ -193,7 +193,7 @@ test.describe('Test suit by - Yaroslav Prokhorenko', () => {
         // Third cycle
         await promoTrigger(coffee3);
         await applyPromo(); 
-        expect(await menuPage.getItemCount()).toBe(10)  ;
+        expect(await menuPage.getItemCount()).toBe(10);
     
         // Verify 3 'Discounted Mocha' presents in cart
         await menuPage.clickCartLink();

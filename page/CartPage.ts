@@ -8,6 +8,7 @@ export class CartPage extends BasePage {
     private emptyCartMessage: Locator;
     private cartItem: Locator;
     private checkoutButton: Locator;
+    private container: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -15,6 +16,7 @@ export class CartPage extends BasePage {
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
         this.checkoutButton = this.page.locator('[data-test="checkout"]');
+        this.container = this.page.locator('#app').locator('.list')
     }
 
     async navigate(): Promise<void> {
@@ -71,9 +73,13 @@ export class CartPage extends BasePage {
 
 
     async isVisible(): Promise<boolean> {
-        return this.page.isVisible("");
+        return this.container.isVisible()
     }
 
-    async waitForVisible(): Promise<void> { }
-    async waitForHidden(): Promise<void> { }
+    async waitForVisible(): Promise<void> {
+        await this.container.waitFor({ state: 'visible', timeout: 5000 })
+    }
+    async waitForHidden(): Promise<void> { 
+        await this.container.waitFor({ state: 'hidden', timeout: 5000 });
+    }
 }
