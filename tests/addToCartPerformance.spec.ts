@@ -41,6 +41,8 @@ test.describe("Add to Cart - Performance Tests", () => {
 
         // Verify that the 8th item was added slower than the average time of the previous 7
         const avgFastDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
-        expect(slowDuration).toBeGreaterThan(avgFastDuration);
+        const slowdownThreshold = 1.5; // вимагаємо як мінімум 1.5x сповільнення, щоб уникнути флаків через незначні коливання часу
+        const expectedMinSlowDuration = avgFastDuration * slowdownThreshold;
+        expect(slowDuration).toBeGreaterThanOrEqual(expectedMinSlowDuration);
     });
 });
