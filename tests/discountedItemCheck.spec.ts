@@ -8,7 +8,7 @@ test.describe('Checking the possibility of unauthorized addition of several unit
         await menuPage.navigate();
     });
 
-    test("TC-22: Cheking of infinite addition of discounted items in the cart", async ({
+    test("TC-22: Checking of infinite addition of discounted items in the cart", async ({
         menuPage,
         cartPage,
     }) => {
