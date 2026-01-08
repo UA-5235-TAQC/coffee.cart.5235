@@ -10,7 +10,6 @@ test.describe("Page reload - Cart items persistence", () => {
         cartPreview = new CartPreviewComponent(menuPage.page);
     });
 
-
     test("the cart items are saved when the page is reloaded", async ({ menuPage, cartPage }) => {
         const itemName = CoffeeTypes.Espresso.en;
 
