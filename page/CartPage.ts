@@ -3,7 +3,6 @@ import { BasePage } from "./BasePage";
 import { CartItemComponent } from "../component";
 import { CoffeeValue } from "../data/CoffeeTypes";
 
-
 export class CartPage extends BasePage {
     private _root: Locator;
     private totalQuantity: Locator;
