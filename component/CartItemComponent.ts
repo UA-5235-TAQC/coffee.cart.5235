@@ -2,7 +2,7 @@ import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
 import { Base } from "../Base";
 
-export class CartItemComponent {
+export class CartItemComponent extends Base {
     protected _root: Locator;
     protected name: Locator;
     protected unitDescription: Locator;
@@ -12,6 +12,7 @@ export class CartItemComponent {
     protected deleteButton: Locator;
 
     constructor(_root: Locator) {
+        super(_root.page());
         this._root = _root;
         this.name = this._root.locator("div >> nth=0"); // item name is the 1st div in the row
         this.unitDescription = this._root.locator(".unit-desc");
