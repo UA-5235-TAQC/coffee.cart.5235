@@ -11,11 +11,11 @@ import { StringUtils } from "../utils/stringUtils";
 import { CoffeeValue, CoffeeTypes } from "../data/CoffeeTypes";
 
 export class MenuPage extends BasePage {
-    protected ConfirmModal: AddToCartModal;
-    protected PaymentModal: PaymentDetailsModalComponent;
-    protected PromoModal: PromoModal;
-    protected SuccessSnackbar: SuccessSnackbarComponent;
-    protected CartPreview: CartPreviewComponent;
+    public ConfirmModal: AddToCartModal;
+    public PaymentModal: PaymentDetailsModalComponent;
+    public PromoModal: PromoModal;
+    public SuccessSnackbar: SuccessSnackbarComponent;
+    public CartPreview: CartPreviewComponent;
     private _root: Locator;
     protected totalBtn: Locator;
     protected itemsList: Locator;
@@ -58,7 +58,6 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
-        const dataTestValue = StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
             has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$\\d+\\.\\d{2}$`) })
         });
