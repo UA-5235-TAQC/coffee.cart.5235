@@ -15,4 +15,7 @@ export default {
     RETRY_FAILED_TESTS,
 };
 
+export const VALID_EMAIL_1 = "email@gmail.com";
+export const VALID_NAME_1 = "RandomName"
+export const DISCOUNTED_COFFEE = '(Discounted) Mocha'
 export const TIMEOUT = 5000;
