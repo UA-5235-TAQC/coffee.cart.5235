@@ -20,13 +20,13 @@ export class PromoModal extends Base {
     async skipPromo() {
         await this.skipButton.click();
     }
-    isVisible(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async isVisible(): Promise<boolean> {
+        return this.root.isVisible();
     }
-    waitForVisible(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async waitForVisible(): Promise<void> {
+        await this.root.waitFor({ state: 'visible' });
     }
-    waitForHidden(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async waitForHidden(): Promise<void> {
+        await this.root.waitFor({ state: 'hidden' });
     }
 }

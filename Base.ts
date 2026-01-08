@@ -2,10 +2,13 @@ import { Page } from "@playwright/test";
 
 export abstract class Base {
 
-    protected page: Page;
+    protected _page: Page;
 
     constructor(page: Page) {
-        this.page = page;
+        this._page = page;
+    }
+    get page(): Page {
+        return this._page;
     }
 
     abstract isVisible(): Promise<boolean>;
