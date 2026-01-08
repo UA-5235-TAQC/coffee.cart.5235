@@ -1,4 +1,5 @@
-import { Locator } from '@playwright/test';
+import {Locator} from '@playwright/test';
+import { getIngredientsFromLocator } from '../utils/domUtils';
 
 /**
  * Represents the coffee card component on the menu page.
@@ -25,6 +26,11 @@ export class CoffeeCartComponent {
      * Retrieves the clean coffee name, excluding the price tag.
      */
     async getName(): Promise<string> {
+        const aria = await this.root.getAttribute('aria-label');
+        if (aria) {
+            return aria.replace('(Discounted)', '').trim();
+        }
+
         const fullText = await this.nameHeader.innerText();
         const priceText = await this.priceLabel.innerText();
         return fullText.replace(priceText, '').trim();
@@ -57,15 +63,11 @@ export class CoffeeCartComponent {
      */
     async rightClick(): Promise<void> {
         // Clicks on the cup body to invoke the context menu
-        await this.cupClickArea.click({ button: 'right' });
+        await this.cupClickArea.click({button: 'right'});
     }
 
-    /**
-     * Retrieves the list of ingredients as an array of strings.
-     */
     async getIngredients(): Promise<string[]> {
-        const texts = await this.ingredients.allTextContents();
-        return texts.map(t => t.trim()).filter(t => t !== '');
+        return getIngredientsFromLocator(this.ingredients);
     }
 
     /**
@@ -84,4 +86,12 @@ export class CoffeeCartComponent {
     async clickName(): Promise<void> {
         await this.nameHeader.click();
     }
+
+    async isVisible(): Promise<boolean> {
+        return this.root.isVisible();
+    }
+
+    async priceIsVisible(): Promise<boolean> {
+        return this.priceLabel.isVisible();
+    }   
 }
