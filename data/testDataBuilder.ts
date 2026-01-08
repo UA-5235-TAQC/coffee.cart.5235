@@ -53,6 +53,7 @@ export class TestDataBuilder {
     }
 
     /**
+
      * Returns valid success snackbar message
      */
     static validSuccessSnackbarMessage() {
