@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { CartPreviewComponent } from "../component";
 import { MenuPage } from "../page/MenuPage";
 import env from "../config/env";
+import { CartPreviewComponent } from "../component/CartPreviewComponent";
+import { CoffeeTypes } from "../data/CoffeeTypes";
 
 test.describe("CartPreview - Smoke Tests", () => {
   let cartPreview: CartPreviewComponent;
