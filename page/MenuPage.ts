@@ -122,12 +122,17 @@ export class MenuPage extends BasePage {
     public get promoModal(): PromoModal {
         return this.PromoModal;
     }
-
     public get paymentModal(): PaymentDetailsModalComponent {
         return this.PaymentModal;
     }
 
     public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
+    }
+    public get cartPreview(): CartPreviewComponent {
+        return this.CartPreview;
+    }
+    public get confirmModal(): AddToCartModal {
+        return this.ConfirmModal;
     }
 }

@@ -12,7 +12,9 @@ export default {
     BASE_CLIENT_URL,
     HEADLESS,
     CI,
-    RETRY_FAILED_TESTS,
+    RETRY_FAILED_TESTS
 };
 
 export const TIMEOUT = 5000;
+export const VALID_USER_NAME = "Test User";
+export const VALID_USER_EMAIL = "test@example.com";
