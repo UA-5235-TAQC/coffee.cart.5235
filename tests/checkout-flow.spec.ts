@@ -1,9 +1,6 @@
-import { expect } from "@playwright/test";
-import { test } from "../fixtures/fixturePage";
+import { expect, test } from "../fixtures/fixturePage";
 import { CoffeeTypes, CoffeeValue } from "../data/CoffeeTypes";
 import { VALID_USER_NAME, VALID_USER_EMAIL } from "../config/env";
-import { PaymentDetailsModalComponent } from "../component";
-import { PromoModal } from "../component";
 
 test.describe("Checkout and Promo Flow Tests", () => {
   test.beforeEach(async ({ menuPage }) => {
@@ -11,12 +8,12 @@ test.describe("Checkout and Promo Flow Tests", () => {
   });
 
   test("TC-15 - Modify cart after starting checkout", async ({
-    page,
     menuPage,
     cartPage,
+    paymentDetailsModal,
+    successSnackbar,
   }) => {
     const coffee = CoffeeTypes.Americano.en;
-    const checkoutModal = new PaymentDetailsModalComponent(page);
 
     // Add first coffee to cart and verify count
     await menuPage.addCoffeeToCart(coffee);
@@ -26,11 +23,11 @@ test.describe("Checkout and Promo Flow Tests", () => {
     await menuPage.clickCartLink();
     await cartPage.waitForVisible();
     await cartPage.openCheckout();
-    expect(await checkoutModal.isVisible()).toBe(true);
+    expect(await paymentDetailsModal.isVisible()).toBe(true);
 
     // Close checkout modal without completing payment
-    await checkoutModal.closeModal();
-    expect(await checkoutModal.isVisible()).toBe(false);
+    await paymentDetailsModal.closeModal();
+    expect(await paymentDetailsModal.isVisible()).toBe(false);
 
     // Return to menu and add another coffee
     await cartPage.clickMenuLink();
@@ -42,28 +39,27 @@ test.describe("Checkout and Promo Flow Tests", () => {
     await menuPage.clickCartLink();
     await cartPage.waitForVisible();
     await cartPage.openCheckout();
-    expect(await checkoutModal.isVisible()).toBe(true);
+    expect(await paymentDetailsModal.isVisible()).toBe(true);
 
     // Complete payment with valid data
-    await checkoutModal.enterName(VALID_USER_NAME);
-    await checkoutModal.enterEmail(VALID_USER_EMAIL);
-    await checkoutModal.submitPayment();
-    await checkoutModal.waitForHidden();
-    expect(await checkoutModal.isVisible()).toBe(false);
+    await paymentDetailsModal.enterName(VALID_USER_NAME);
+    await paymentDetailsModal.enterEmail(VALID_USER_EMAIL);
+    await paymentDetailsModal.submitPayment();
+    await paymentDetailsModal.waitForHidden();
+    expect(await paymentDetailsModal.isVisible()).toBe(false);
 
     // Verify success notification and cart is cleared
-    await menuPage.successSnackbar.waitForVisible();
-    expect(await menuPage.successSnackbar.isVisible()).toBe(true);
-    await menuPage.successSnackbar.waitForHidden();
+    await successSnackbar.waitForVisible();
+    expect(await successSnackbar.isVisible()).toBe(true);
+    await successSnackbar.waitForHidden();
     expect(await menuPage.getItemCount()).toBe(0);
   });
 
   test("TC-14 - Promo modal appears after every 3 items added to cart", async ({
     menuPage,
-    page,
+    promoModal,
   }) => {
     const coffee = CoffeeTypes.Americano.en;
-    const promoModal = new PromoModal(page);
 
     // Add 3 items → promo modal should appear
     for (let i = 0; i < 3; i++) {
@@ -111,28 +107,28 @@ test.describe("Checkout and Promo Flow Tests", () => {
 
     // 1st item: increase quantity by 1
     const firstItem = await cartPage.getItemByName(coffees[0]);
-    expect(firstItem).not.toBeNull();
-    await firstItem!.increaseQuantity();
-    expect(await firstItem!.getQuantity()).toBe(3);
+    await firstItem.increaseQuantity();
+    expect(await firstItem.getQuantity()).toBe(3);
 
     // 2nd item: decrease quantity
     const secondItem = await cartPage.getItemByName(coffees[1]);
-    expect(secondItem).not.toBeNull();
-    await secondItem!.decreaseQuantity();
-    expect(await secondItem!.getQuantity()).toBe(1);
+    await secondItem.decreaseQuantity();
+    expect(await secondItem.getQuantity()).toBe(1);
 
     // 3rd item: remove by decreasing to 0
     const thirdItem = await cartPage.getItemByName(coffees[2]);
-    expect(thirdItem).not.toBeNull();
-    await thirdItem!.decreaseQuantity();
-    await thirdItem!.decreaseQuantity();
-    expect(await cartPage.getItemByName(coffees[2])).toBeNull();
+    await thirdItem.decreaseQuantity();
+    await thirdItem.decreaseQuantity();
+    await expect(async () => {
+      await cartPage.getItemByName(coffees[2]);
+    }).rejects.toThrow();
 
     // 4th item: remove directly
     const fourthItem = await cartPage.getItemByName(coffees[3]);
-    expect(fourthItem).not.toBeNull();
-    await fourthItem!.removeFromCart();
-    expect(await cartPage.getItemByName(coffees[3])).toBeNull();
+    await fourthItem.removeFromCart();
+    await expect(async () => {
+      await cartPage.getItemByName(coffees[3]);
+    }).rejects.toThrow();
 
     // Get totals from cartPage
     const cartTotalItems = await cartPage.getTotalQuantity();

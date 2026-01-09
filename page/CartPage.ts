@@ -1,13 +1,14 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { CartItemComponent } from "../component";
+import { CoffeeValue } from "../data/CoffeeTypes";
 
 export class CartPage extends BasePage {
   private totalQuantity: Locator;
   private emptyCartMessage: Locator;
   private cartItem: Locator;
   private checkoutButton: Locator;
-  private cartPageList: Locator;
+  protected cartItemList: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -15,20 +16,26 @@ export class CartPage extends BasePage {
     this.emptyCartMessage = this.page.getByText("No coffee, go add some.");
     this.cartItem = this.page.locator('xpath=//*[@id="app"]/div[2]/div/ul/li');
     this.checkoutButton = this.page.locator('[data-test="checkout"]');
-    this.cartPageList = this.page.locator(".list");
-  }
-
-  async navigate(): Promise<void> {
-    await this.page.goto("/cart");
+    this.cartItemList = this.page.locator("div.list");
   }
 
   async getItemsList(): Promise<CartItemComponent[]> {
     const itemList: CartItemComponent[] = [];
     const all = await this.cartItem.all();
+
     for (const item of all) {
-      itemList.push(new CartItemComponent(item));
+      const classAttr = await item.getAttribute("class");
+      if (classAttr !== "list-header") {
+        itemList.push(new CartItemComponent(item));
+      }
     }
     return itemList;
+  }
+
+  async getTotalQuantity(): Promise<number> {
+    let quantity = await this.totalQuantity.innerText();
+    quantity = quantity.split(" ")[1].replace(/[()]/g, "");
+    return Number(quantity);
   }
 
   async getTotalPrice(): Promise<number> {
@@ -38,12 +45,6 @@ export class CartPage extends BasePage {
       return parseFloat(price);
     }
     return 0;
-  }
-
-  async getTotalQuantity(): Promise<number> {
-    let quantity = await this.totalQuantity.innerText();
-    quantity = quantity.split(" ")[1].replace(/[()]/g, "");
-    return Number(quantity);
   }
 
   async isEmpty(): Promise<boolean> {
@@ -57,12 +58,12 @@ export class CartPage extends BasePage {
     await this.checkoutButton.click();
   }
 
-  async getItemByName(itemName: string): Promise<CartItemComponent | null> {
+  async getItemByName(itemName: CoffeeValue): Promise<CartItemComponent> {
     const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
     const count = await itemLocator.count();
 
     if (count === 0) {
-      return null;
+      throw new Error(`Item with name "${itemName}" not found in the cart.`);
     }
 
     const parsedItem = new CartItemComponent(itemLocator);
@@ -70,14 +71,18 @@ export class CartPage extends BasePage {
   }
 
   async isVisible(): Promise<boolean> {
-    return this.cartPageList.isVisible();
+    return this.cartItemList.isVisible();
   }
 
   async waitForVisible(): Promise<void> {
-    await this.cartPageList.waitFor({ state: "visible" });
+    await this.cartItemList.waitFor({ state: "visible" });
   }
 
   async waitForHidden(): Promise<void> {
-    await this.cartPageList.waitFor({ state: "hidden" });
+    await this.cartItemList.waitFor({ state: "hidden" });
+  }
+
+  get itemList(): Locator {
+    return this.cartItemList;
   }
 }

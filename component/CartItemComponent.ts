@@ -1,7 +1,8 @@
 import { Locator } from "@playwright/test";
 import { parsePrice, parseQuantity } from "../utils";
+import { Base } from "../Base";
 
-export class CartItemComponent {
+export class CartItemComponent extends Base {
     protected root: Locator;
     protected name: Locator;
     protected unitDescription: Locator;
@@ -11,6 +12,8 @@ export class CartItemComponent {
     protected deleteButton: Locator;
 
     constructor(root: Locator) {
+        super(root.page());
+
         this.root = root;
         this.name = this.root.locator("div >> nth=0"); // item name is the 1st div in the row
         this.unitDescription = this.root.locator(".unit-desc");
@@ -67,11 +70,39 @@ export class CartItemComponent {
         await this.addOneButton.click();
     }
 
+    async increaseQuantityBy(times: number): Promise<void> {
+        for (let i = 0; i < times; i++) {
+            await this.increaseQuantity();
+        }
+    }
+
     async decreaseQuantity(): Promise<void> {
         await this.removeOneButton.click();
     }
 
+    async decreaseQuantityBy(times: number): Promise<void> {
+        for (let i = 0; i < times; i++) {
+            await this.decreaseQuantity();
+        }
+    }
+
     async removeFromCart(): Promise<void> {
         await this.deleteButton.click();
+    }
+
+    async isVisible(): Promise<boolean> {
+        return this.root.isVisible();
+    }
+
+    async waitForVisible(): Promise<void> {
+        await this.root.waitFor({ state: 'visible' });
+    }
+
+    async waitForHidden(): Promise<void> {
+        await this.root.waitFor({ state: 'hidden' });
+    }
+
+    get container(): Locator {
+        return this.root;
     }
 }
