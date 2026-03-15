@@ -130,4 +130,14 @@ export class MenuPage extends BasePage {
     public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
     }
+
+    async triggerPromo(item: CoffeeValue) {
+        for (let i = 0; i < 3; i++) {
+            await this.addCoffeeToCart(item);
+            let count = await this.getItemCount();
+            if (count % 3 === 0) {
+                break;
+            }           
+        }         
+    }    
 }
