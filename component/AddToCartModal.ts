@@ -29,7 +29,7 @@ export class AddToCartModal extends Base {
     }
 
     async isVisible(): Promise<boolean> {
-        return await this.modalContainer.isVisible();
+        return this.modalContainer.isVisible();
     }
     async waitForVisible(): Promise<void> {
         await this.modalContainer.waitFor({ state: 'visible' });

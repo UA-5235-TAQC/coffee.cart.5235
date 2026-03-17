@@ -10,13 +10,13 @@ test.describe("CartPreview - Smoke Tests", () => {
   });
 
   test("TC-01 - Cart preview initially hidden", async ({ menuPage }) => {
-    await expect(menuPage.cartPreview.cartPreviewElement).toBeHidden();
+    expect(await menuPage.cartPreview.isVisible()).toBe(false);
   });
 
   test("TC-02 - Cart preview is shown on hover", async ({ menuPage }) => {
     await menuPage.addCoffeeToCart(coffee);
     await menuPage.showCheckout();
-    await expect(menuPage.cartPreview.cartPreviewElement).toBeVisible();
+    expect(await menuPage.cartPreview.isVisible()).toBe(true);
   });
 
   test("TC-03 - Remove item from cart when quantity reaches zero", async ({
@@ -31,7 +31,7 @@ test.describe("CartPreview - Smoke Tests", () => {
     // Verify item removed and cart preview hidden
     expect(await menuPage.getItemCount()).toBe(0);
     await menuPage.cartPreview.waitForHidden();
-    await expect(menuPage.cartPreview.cartPreviewElement).toBeHidden();
+    expect(await menuPage.cartPreview.isVisible()).toBe(false);
   });
 
   test("TC-04 - Total updates when increasing item quantity", async ({

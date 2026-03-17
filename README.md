@@ -2,6 +2,10 @@
 
 A small Playwright Test project for learning end-to-end testing against the demo storefront at https://coffee-cart.app/ — includes Page Objects, fixtures, example tests, and recommended scripts to run tests locally and in CI.
 
+
+# [Open playwright report](https://ua-5235-taqc.github.io/coffee.cart.5235/)
+
+
 ## Quick start
 
 1) Clone the repository and install dependencies:

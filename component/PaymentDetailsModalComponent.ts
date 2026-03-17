@@ -89,4 +89,8 @@ export class PaymentDetailsModalComponent extends Base {
     async submitPayment(): Promise<void> {
         await this.submitButton.click();
     }
+
+    get pageInstance(): Page {
+        return this.page;
+    }
 }

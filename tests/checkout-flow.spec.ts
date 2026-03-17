@@ -1,10 +1,11 @@
 import { expect, test } from "../fixtures/fixturePage";
 import { CoffeeTypes, CoffeeValue } from "../data/CoffeeTypes";
-import { VALID_USER_NAME, VALID_USER_EMAIL } from "../config/env";
+import { TestDataBuilder } from "../data/testDataBuilder";
 
 test.describe("Checkout and Promo Flow Tests", () => {
   test.beforeEach(async ({ menuPage }) => {
     await menuPage.navigate();
+    await menuPage.waitForVisible();
   });
 
   test("TC-15 - Modify cart after starting checkout", async ({
@@ -13,6 +14,7 @@ test.describe("Checkout and Promo Flow Tests", () => {
     paymentDetailsModal,
     successSnackbar,
   }) => {
+    const paymentData = TestDataBuilder.validPaymentDetails();
     const coffee = CoffeeTypes.Americano.en;
 
     // Add first coffee to cart and verify count
@@ -42,8 +44,8 @@ test.describe("Checkout and Promo Flow Tests", () => {
     expect(await paymentDetailsModal.isVisible()).toBe(true);
 
     // Complete payment with valid data
-    await paymentDetailsModal.enterName(VALID_USER_NAME);
-    await paymentDetailsModal.enterEmail(VALID_USER_EMAIL);
+    await paymentDetailsModal.enterName(paymentData.name);
+    await paymentDetailsModal.enterEmail(paymentData.email);
     await paymentDetailsModal.submitPayment();
     await paymentDetailsModal.waitForHidden();
     expect(await paymentDetailsModal.isVisible()).toBe(false);
