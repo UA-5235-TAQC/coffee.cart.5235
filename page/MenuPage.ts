@@ -26,12 +26,12 @@ export class MenuPage extends BasePage {
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this._totalBtn = this.page.locator('[data-test="checkout"]');
-        this.itemsList = page.locator('ul');
+        this._totalBtn = page.getByRole('button', {name: 'Proceed to checkout'});
+        this.itemsList = this.page.locator('ul');
     }
 
-    async navigate(): Promise<void> {
-        await this.page.goto("/");
+    async navigate(path: string = "/"): Promise<void> {
+        await this.page.goto(path);
     }
 
     async isVisible(): Promise<boolean> {
@@ -58,9 +58,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
-        const dataTestValue = StringUtils.nameToDataTest(name);
+        StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator(`[data-test="${dataTestValue}"]`)
+            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$`) })
         });
 
         return new CoffeeCartComponent(itemLocator);
@@ -126,11 +126,49 @@ export class MenuPage extends BasePage {
         return this.PromoModal;
     }
 
+    async getAllCoffeeItems(): Promise<CoffeeCartComponent[]> {
+        const items = this.itemsList.locator('li').filter({
+            has: this.page.locator('div.cup-body[data-test]')
+        });
+
+        const count = await items.count();
+        const coffeeItems: CoffeeCartComponent[] = [];
+
+        for (let i = 0; i < count; i++) {
+            coffeeItems.push(new CoffeeCartComponent(items.nth(i)));
+        }
+
+        return coffeeItems;
+    }
+
+    async getVisibleCoffeeItems(): Promise<CoffeeCartComponent[]> {
+        const items = this.instance.locator('ul > li').filter({
+            has: this.instance.locator('div.cup-body[data-test]')
+        });
+        const count = await items.count();
+        const coffeeItems: CoffeeCartComponent[] = [];
+        for (let i = 0; i < count; i++) {
+            const item = new CoffeeCartComponent(items.nth(i));
+            if (await item.isVisible()) coffeeItems.push(item);
+        }
+        return coffeeItems;
+    }
+
     public get paymentModal(): PaymentDetailsModalComponent {
         return this.PaymentModal;
     }
 
     public get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
+    }
+
+    async triggerPromo(item: CoffeeValue) {
+        for (let i = 0; i < 3; i++) {
+            await this.addCoffeeToCart(item);
+            const count = await this.getItemCount();
+            if (count % 3 === 0) {
+                break;
+            }
+        }
     }
 }

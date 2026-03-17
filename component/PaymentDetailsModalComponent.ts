@@ -101,4 +101,8 @@ export class PaymentDetailsModalComponent extends Base {
     async isEmailValid(): Promise<boolean> {
         return this.emailInput.evaluate((el: HTMLInputElement) => el.checkValidity());
     }
+
+    get pageInstance(): Page {
+        return this.page;
+    }
 }

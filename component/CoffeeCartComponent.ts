@@ -92,5 +92,5 @@ export class CoffeeCartComponent {
 
     async priceIsVisible(): Promise<boolean> {
         return this.priceLabel.isVisible();
-    }   
+    }
 }
