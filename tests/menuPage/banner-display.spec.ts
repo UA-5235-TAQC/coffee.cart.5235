@@ -49,6 +49,11 @@ test.describe("TC-25: Promo banner & theme persistence via URL parameter", () =>
         await expect(cartPage.itemList).toBeVisible();
 
         const cartItem = await cartPage.getItemByName(espressoName);
+
+        if (!cartItem) {
+            throw new Error(`Товар ${espressoName} не знайдено в кошику!`);
+        }
+
         await expect(cartItem.container).toBeVisible();
         expect(await cartItem.getQuantity()).toBe(1);
         expect(await cartItem.getTotalPrice()).toBe(espressoPrice);
