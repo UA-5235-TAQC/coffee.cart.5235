@@ -27,7 +27,7 @@ test.describe("Cart item", () => {
         await cartPage.waitForVisible();
 
         const cartItem = await cartPage.getItemByName(coffeeName);
-        if (!cartItem) throw new Error(`Товар "${coffeeName}" не знайдено`);
+        if (!cartItem) throw new Error(`"${coffeeName}" is not found`);
 
         expect(await cartItem.getQuantity()).toBe(amountOfItemsInCart);
         expect(await cartItem.getTotalPrice()).toBe(expectedTotalPrice);
