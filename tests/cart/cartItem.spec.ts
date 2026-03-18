@@ -3,59 +3,46 @@ import { test } from "../../fixtures/fixturePage";
 import { CoffeeTypes } from "../../data/CoffeeTypes";
 
 test.describe("Cart item", () => {
-  test.beforeEach(async ({ menuPage }) => {
-    await menuPage.navigate();
+    test.beforeEach(async ({ menuPage }) => {
+        await menuPage.navigate();
+        const cartItemCount = await menuPage.getItemCount();
+        expect(cartItemCount).toBe(0);
+    });
 
-    const cartItemCount = await menuPage.getItemCount();
+    test("TC-006: Managing the number of items in the cart", async ({ menuPage, cartPage }) => {
+        const coffeeName = CoffeeTypes.Cappuccino.en;
+        const cappuccinoPrice = await menuPage.getCoffeeItem(coffeeName).getPrice();
 
-    expect(cartItemCount).toBe(0);
-  });
+        await menuPage.addCoffeeToCart(coffeeName);
+        await menuPage.addCoffeeToCart(coffeeName);
+        await menuPage.addCoffeeToCart(coffeeName);
 
-  test("TC-006: Managing the number of items in the cart", async ({ menuPage, cartPage }) => {
-    const cappuccinoPrice = await menuPage.getCoffeeItem(CoffeeTypes.Cappuccino.en).getPrice();
+        let amountOfItemsInCart = 3;
+        let expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
 
-    await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
-    await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
-    await menuPage.addCoffeeToCart(CoffeeTypes.Cappuccino.en);
+        expect(await menuPage.getItemCount()).toBe(amountOfItemsInCart);
+        expect(await menuPage.getTotalBtnPrice()).toBe(expectedTotalPrice);
 
-    let amountOfItemsInCart = 3;
-    let expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
+        await menuPage.clickCartLink();
+        await cartPage.waitForVisible();
 
-    const cartItemCount = await menuPage.getItemCount();
-    const totalBtnPrice = await menuPage.getTotalBtnPrice();
+        const cartItem = await cartPage.getItemByName(coffeeName);
+        if (!cartItem) throw new Error(`Товар "${coffeeName}" не знайдено`);
 
-    expect(cartItemCount).toBe(amountOfItemsInCart);
-    expect(totalBtnPrice).toBe(expectedTotalPrice);
+        expect(await cartItem.getQuantity()).toBe(amountOfItemsInCart);
+        expect(await cartItem.getTotalPrice()).toBe(expectedTotalPrice);
 
-    await menuPage.clickCartLink();
-    await expect(cartPage.itemList).toBeVisible();
+        await cartItem.increaseQuantity();
+        amountOfItemsInCart += 1;
+        expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
 
-    const cartItem = await cartPage.getItemByName(CoffeeTypes.Cappuccino.en);
+        expect(await cartItem.getQuantity()).toBe(amountOfItemsInCart);
+        expect(await cartItem.getTotalPrice()).toBe(expectedTotalPrice); // Тепер буде 76 === 76
 
-    await expect(cartItem.container).toBeVisible();
+        await cartItem.decreaseQuantityBy(amountOfItemsInCart);
 
-    const cartItemQuantity = await cartItem.getQuantity();
-    const cartItemTotalPrice = await cartItem.getTotalPrice();
-
-    expect(cartItemQuantity).toBe(amountOfItemsInCart);
-    expect(cartItemTotalPrice).toBe(expectedTotalPrice);
-
-    await cartItem.increaseQuantity();
-
-    amountOfItemsInCart += 1;
-    expectedTotalPrice = cappuccinoPrice * amountOfItemsInCart;
-
-    const cartItemQuantityAfterIncrease = await cartItem.getQuantity();
-    const cartItemTotalPriceAfterIncrease = await cartItem.getTotalPrice();
-
-    expect(cartItemQuantityAfterIncrease).toBe(amountOfItemsInCart);
-    expect(cartItemTotalPriceAfterIncrease).toBe(expectedTotalPrice);
-
-    await cartItem.decreaseQuantityBy(4);
-
-    const isCartEmpty = await cartPage.isEmpty();
-
-    await expect(cartItem.container).toBeHidden();
-    expect(isCartEmpty).toBe(true);
-  });
+        await expect(cartItem.container).toBeHidden();
+        const isCartEmpty = await cartPage.isEmpty();
+        expect(isCartEmpty).toBe(true);
+    });
 });
