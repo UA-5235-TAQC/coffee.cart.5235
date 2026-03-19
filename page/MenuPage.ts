@@ -58,7 +58,7 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
-        const dataTestValue = StringUtils.nameToDataTest(name);
+        StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
             has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$`) })
         });
@@ -85,7 +85,7 @@ export class MenuPage extends BasePage {
     async showConfirmModal(): Promise<void>;
     async showConfirmModal(coffee: CoffeeValue): Promise<void>;
 
-    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee 
+    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee
         let coffeeName: CoffeeValue;
         if (coffee) {
             coffeeName = coffee;
@@ -165,10 +165,10 @@ export class MenuPage extends BasePage {
     async triggerPromo(item: CoffeeValue) {
         for (let i = 0; i < 3; i++) {
             await this.addCoffeeToCart(item);
-            let count = await this.getItemCount();
+            const count = await this.getItemCount();
             if (count % 3 === 0) {
                 break;
-            }           
-        }         
-    }    
+            }
+        }
+    }
 }
