@@ -34,6 +34,7 @@ export class CartItemComponent extends Base {
     }
 
     async getUnitDescription(): Promise<string> {
+        await this.unitDescription.waitFor({ state: 'visible' });
         const unitDescText = await this.unitDescription.textContent();
 
         if (!unitDescText) {
