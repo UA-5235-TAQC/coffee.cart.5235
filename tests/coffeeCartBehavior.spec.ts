@@ -86,35 +86,38 @@ test.describe('Coffee cart app behaviour', () => {
             expect(await paymentModal.getEmailValue()).toBe(email);
             expect(await paymentModal.isPromotionChecked()).toBeTruthy();        
         });
-    });     
-    
+    });
+
     test('Ensure promo Mocha offer does not appear after \
         adding three items via right-click “Add item to the cart?” modal',
         async ({ menuPage, cartPage, addToCartModal, promoModal }) => {
-        
-        await test.step("Add 3 coffee items", async() => {
-            const coffee = menuPage.getCoffeeItem(CoffeeTypes.Espresso.en);
-            for (let i = 0; i < 3; i++) {            
-                await coffee.rightClick();               
-                await addToCartModal.accept();
-            }
-        });        
 
-        await test.step("Verify promo item modal is appear and item count = 3", async() => {
-            const result = await promoModal.isVisible();
-            const itemCount = await menuPage.getItemCount();
-            expect.soft(result).toBeTruthy();
-            expect(itemCount).toBe(3);
-            console.log(itemCount);
-        });        
+            await test.step("Add 3 coffee items via context menu", async() => {
+                const coffee = menuPage.getCoffeeItem(CoffeeTypes.Espresso.en);
+                for (let i = 0; i < 3; i++) {
+                    await coffee.rightClick();
+                    await addToCartModal.accept();
+                }
+            });
 
-        await test.step("Verify no discounted Mocha is added automatically", async() => {
-            await menuPage.clickCartLink();
-            await cartPage.waitForVisible();
-            const isExists = await cartPage.getItemByName(CoffeeTypes.Mocha.en);
-            expect(isExists).toBeNull();
+            await test.step("Verify promo item modal is NOT visible and item count = 3", async() => {
+                const isPromoVisible = await promoModal.isVisible();
+                const itemCount = await menuPage.getItemCount();
+
+                // ВИПРАВЛЕНО: Ми очікуємо, що модалка НЕ з'явиться (false)
+                expect(isPromoVisible).toBeFalsy();
+                expect(itemCount).toBe(3);
+            });
+
+            await test.step("Verify no discounted Mocha is added automatically to the cart", async() => {
+                await menuPage.clickCartLink();
+                await cartPage.waitForVisible();
+                const mochaItem = await cartPage.getItemByName(CoffeeTypes.Mocha.en);
+
+                // Перевіряємо, що Mocha не додалася як акційний товар
+                expect(mochaItem).toBeNull();
+            });
         });
-    });
     
     test('Verify cart link in header displays \
         correct total item count', async ({ menuPage, cartPreview}) => {

@@ -18,6 +18,10 @@ export class CartPage extends BasePage {
         this.container = this.page.locator('#app .list');
     }
 
+    public get itemList(): Locator {
+        return this.container;
+    }
+
     async navigate(): Promise<void> {
         await this.page.goto("/cart");
     }
