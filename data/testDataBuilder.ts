@@ -25,14 +25,14 @@ export class TestDataBuilder {
     }
 
     /**
-     * Returns long name (>1000 chars) for negative testing
+     * Returns long name (>1000 chars)
      */
     static longName(length = 1001) {
         return 'A'.repeat(length);
     }
 
     /**
-     * Returns long email (>300 chars) for negative testing
+     * Returns long email (>300 chars)
      */
     static longEmail(length = 301) {
         return 'a'.repeat(length) + '@gmail.com';
