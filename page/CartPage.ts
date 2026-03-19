@@ -50,23 +50,23 @@ export class CartPage extends BasePage {
         return Number(quantity);
     }
 
-    async isEmpty(): Promise<boolean> {
-        const isVisible = await this.emptyCartMessage.isVisible();
-        const quantity = await this.getTotalQuantity();
-        const status = isVisible && quantity === 0;
-        return status;
-    }
+  async isEmpty(): Promise<boolean> {
+    const isVisible = await this.emptyCartMessage.isVisible();
+    const quantity = await this.getTotalQuantity();
+    const status = isVisible && quantity === 0;
+    return status;
+  }
 
-    async openCheckout(): Promise<void> {
-        await this.checkoutButton.click();
-    }
+  async openCheckout(): Promise<void> {
+    await this.checkoutButton.click();
+  }
 
-    async getItemByName(itemName: string): Promise<CartItemComponent | null> {
+    async getItemByName(itemName: string): Promise<CartItemComponent> {
         const itemLocator = this.cartItem.filter({ hasText: itemName }).first();
         const count = await itemLocator.count();
 
         if (count === 0) {
-            return null;
+            throw new Error(`Item with name "${itemName}" not found in the cart.`);
         }
 
         return new CartItemComponent(itemLocator);
@@ -81,5 +81,8 @@ export class CartPage extends BasePage {
     }
     async waitForHidden(): Promise<void> { 
         await this.container.waitFor({ state: 'hidden', timeout: 5000 });
+    }
+    get itemList(): Locator {
+      return this.cartItem;
     }
 }

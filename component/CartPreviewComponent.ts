@@ -13,7 +13,7 @@ export class CartPreviewComponent extends Base {
     }
 
     async isVisible(): Promise<boolean> {
-        return await this.root.isVisible();
+        return this.root.isVisible();
     }
 
     async waitForVisible(): Promise<void> {
@@ -22,10 +22,6 @@ export class CartPreviewComponent extends Base {
 
     async waitForHidden(): Promise<void> {
         await this.root.waitFor({ state: 'hidden' });
-    }
-
-    get cartPreviewElement() {
-        return this.root;
     }
 
     // Returns a locator for a specific item (li) in the cart.
@@ -47,3 +43,12 @@ export class CartPreviewComponent extends Base {
             .click();
     }
 }
+
+
+
+
+
+
+
+
+

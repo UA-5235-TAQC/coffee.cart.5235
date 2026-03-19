@@ -126,6 +126,13 @@ export class MenuPage extends BasePage {
         return this.PromoModal;
     }
 
+    public get cartPreview(): CartPreviewComponent {
+        return this.CartPreview;
+    }
+    public get confirmModal(): AddToCartModal {
+        return this.ConfirmModal;
+    }
+
     async getAllCoffeeItems(): Promise<CoffeeCartComponent[]> {
         const items = this.itemsList.locator('li').filter({
             has: this.page.locator('div.cup-body[data-test]')
@@ -172,3 +179,4 @@ export class MenuPage extends BasePage {
         }
     }
 }
+
