@@ -67,7 +67,9 @@ export class MenuPage extends BasePage {
     }
 
     async addCoffeeToCart(): Promise<void>;
+
     async addCoffeeToCart(coffee: CoffeeValue): Promise<void>;
+
     async addCoffeeToCart(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee
         let coffeeName: CoffeeValue;
 
@@ -83,9 +85,10 @@ export class MenuPage extends BasePage {
     }
 
     async showConfirmModal(): Promise<void>;
+    
     async showConfirmModal(coffee: CoffeeValue): Promise<void>;
 
-    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee
+    async showConfirmModal(coffee?: CoffeeValue): Promise<void> { // empty parameter = random coffee 
         let coffeeName: CoffeeValue;
         if (coffee) {
             coffeeName = coffee;
@@ -122,13 +125,14 @@ export class MenuPage extends BasePage {
         await this._totalBtn.hover();
     }
 
-    public get promoModal(): PromoModal {
+    get promoModal(): PromoModal {
         return this.PromoModal;
     }
 
     public get cartPreview(): CartPreviewComponent {
         return this.CartPreview;
     }
+    
     public get confirmModal(): AddToCartModal {
         return this.ConfirmModal;
     }
@@ -161,11 +165,11 @@ export class MenuPage extends BasePage {
         return coffeeItems;
     }
 
-    public get paymentModal(): PaymentDetailsModalComponent {
+    get paymentModal(): PaymentDetailsModalComponent {
         return this.PaymentModal;
     }
 
-    public get successSnackbar(): SuccessSnackbarComponent {
+    get successSnackbar(): SuccessSnackbarComponent {
         return this.SuccessSnackbar;
     }
 
@@ -178,5 +182,12 @@ export class MenuPage extends BasePage {
             }
         }
     }
-}
 
+    public totalButton(): Locator {
+        return this._totalBtn;
+    }
+
+    async reloadPage(): Promise<void> {
+        await this.page.reload();
+    }
+}
