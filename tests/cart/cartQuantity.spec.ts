@@ -53,7 +53,7 @@ test.describe("Cart Quantity Management", () => {
 
         // Step 5: Remove item by decreasing quantity to zero
         await cartEspressoItem.decreaseQuantity();
-        await expect(cartEspressoItem.container).toBeHidden();
+        await expect(cartEspressoItem.root).toBeHidden();
         expect(await cartPage.isEmpty()).toBe(true);
 
         // Step 6: Rapid clicks (multiple additions)
@@ -77,7 +77,7 @@ test.describe("Cart Quantity Management", () => {
 
         // Step 7: Clear cart using decreaseQuantityBy method
         await cartEspressoItem.decreaseQuantityBy(amountOfEspresso);
-        await expect(cartEspressoItem.container).toBeHidden();
+        await expect(cartEspressoItem.root).toBeHidden();
         expect(await cartPage.isEmpty()).toBe(true);
 
         // Step 8: Remove item via the "X" button (Remove)
@@ -93,7 +93,7 @@ test.describe("Cart Quantity Management", () => {
 
         await itemToDelete.removeFromCart(); // Click the "X" button
 
-        await expect(itemToDelete.container).toBeHidden();
+        await expect(itemToDelete.root).toBeHidden();
         expect(await cartPage.isEmpty()).toBe(true);
         expect(await cartPage.getItemCount()).toBe(0);
     });

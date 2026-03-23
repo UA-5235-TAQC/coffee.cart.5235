@@ -3,6 +3,7 @@ import { BasePage } from "./BasePage";
 import { CartItemComponent } from "../component";
 
 export class CartPage extends BasePage {
+    private _root: Locator;
     private totalQuantity: Locator;
     private emptyCartMessage: Locator;
     private cartItem: Locator;
@@ -11,15 +12,12 @@ export class CartPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+        this._root = this.page.locator('div.list').first();
         this.totalQuantity = this.page.getByRole("link", { name: "Cart" })
         this.emptyCartMessage = this.page.getByText('No coffee, go add some.');
         this.cartItem = this.page.locator('#app div.list ul').last().locator(".list-item");
         this.checkoutButton = this.page.locator('[data-test="checkout"]');
         this.container = this.page.locator('#app .list');
-    }
-
-    public get itemList(): Locator {
-        return this.container;
     }
 
     async navigate(): Promise<void> {
@@ -84,5 +82,9 @@ export class CartPage extends BasePage {
     }
     get itemList(): Locator {
       return this.cartItem;
+    }
+  
+    get root(): Locator {
+        return this._root;
     }
 }
