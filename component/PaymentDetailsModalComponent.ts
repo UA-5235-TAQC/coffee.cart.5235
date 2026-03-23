@@ -89,4 +89,20 @@ export class PaymentDetailsModalComponent extends Base {
     async submitPayment(): Promise<void> {
         await this.submitButton.click();
     }
+
+    async getEmailValidationMessage(): Promise<string> {
+        return this.emailInput.evaluate((el: HTMLInputElement) => el.validationMessage);
+    }
+
+    async isNameValid(): Promise<boolean> {
+        return this.nameInput.evaluate((el: HTMLInputElement) => el.checkValidity());
+    }
+
+    async isEmailValid(): Promise<boolean> {
+        return this.emailInput.evaluate((el: HTMLInputElement) => el.checkValidity());
+    }
+
+    get pageInstance(): Page {
+        return this.page;
+    }
 }

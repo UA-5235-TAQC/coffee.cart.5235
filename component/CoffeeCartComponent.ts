@@ -26,7 +26,7 @@ export class CoffeeCartComponent {
      * Retrieves the clean coffee name, excluding the price tag.
      */
     async getName(): Promise<string> {
-        const aria = await this.root.getAttribute('aria-label');
+        const aria = await this._root.getAttribute('aria-label');
         if (aria) {
             return aria.replace('(Discounted)', '').trim();
         }
@@ -83,19 +83,11 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    get getPriceLocator(): Locator {
-        return this.priceLabel;
-    }
-
-    get root(): Locator {
-        return this._root;
-    }
-    
     async isVisible(): Promise<boolean> {
-        return this.root.isVisible();
+        return this._root.isVisible();
     }
 
     async priceIsVisible(): Promise<boolean> {
         return this.priceLabel.isVisible();
-    }   
+    }
 }

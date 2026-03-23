@@ -53,4 +53,8 @@ export abstract class BasePage extends Base {
         const text = await this.cartPageLink.textContent();
         return StringUtils.extractNumbers(text ?? "0");
     }
+
+    async reload(): Promise<void> {
+        await this.page.reload();
+    }
 }
