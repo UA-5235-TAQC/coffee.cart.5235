@@ -79,11 +79,18 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
+    /**
+     * Single-click on the coffee title (does not trigger translation)
+     */
+    async clickName(): Promise<void> {
+        await this.nameHeader.click();
+    }
+
     async isVisible(): Promise<boolean> {
         return this.root.isVisible();
     }
 
     async priceIsVisible(): Promise<boolean> {
         return this.priceLabel.isVisible();
-    }   
+    }
 }

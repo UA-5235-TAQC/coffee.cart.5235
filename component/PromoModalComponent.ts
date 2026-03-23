@@ -22,6 +22,7 @@ export class PromoModal extends Base {
     }
 
     async acceptPromo() {
+        await this.waitForVisible();
         await this.acceptButton.click();
     }
 
