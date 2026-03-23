@@ -11,23 +11,25 @@ import {StringUtils} from "../utils/stringUtils";
 import {CoffeeValue, CoffeeTypes} from "../data/CoffeeTypes";
 
 export class MenuPage extends BasePage {
-    protected ConfirmModal: AddToCartModal;
-    protected PaymentModal: PaymentDetailsModalComponent;
-    protected PromoModal: PromoModal;
-    protected SuccessSnackbar: SuccessSnackbarComponent;
-    protected CartPreview: CartPreviewComponent;
+    public ConfirmModal: AddToCartModal;
+    public PaymentModal: PaymentDetailsModalComponent;
+    public PromoModal: PromoModal;
+    public SuccessSnackbar: SuccessSnackbarComponent;
+    public CartPreview: CartPreviewComponent;
+    private _root: Locator;
     protected _totalBtn: Locator;
     protected itemsList: Locator;
 
     constructor(page: Page) {
         super(page);
+        this._root = page.locator('ul').nth(1).locator('..');
         this.ConfirmModal = new AddToCartModal(page);
         this.PaymentModal = new PaymentDetailsModalComponent(page);
         this.PromoModal = new PromoModal(page);
         this.SuccessSnackbar = new SuccessSnackbarComponent(page);
         this.CartPreview = new CartPreviewComponent(page);
-        this._totalBtn = page.getByRole('button', {name: 'Proceed to checkout'});
-        this.itemsList = this.page.locator('ul');
+        this._totalBtn = this._root.locator('.pay-container').getByLabel('Proceed to checkout');
+        this.itemsList = this._root.locator('ul');
     }
 
     async navigate(path: string = "/"): Promise<void> {
@@ -58,11 +60,9 @@ export class MenuPage extends BasePage {
     }
 
     getCoffeeItem(name: CoffeeValue): CoffeeCartComponent {
-        StringUtils.nameToDataTest(name);
         const itemLocator = this.itemsList.locator('li').filter({
-            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$`) })
+            has: this.page.locator('h4', { hasText: new RegExp(`^${name} \\$\\d+\\.\\d{2}$`) })
         });
-
         return new CoffeeCartComponent(itemLocator);
     }
 
@@ -125,6 +125,10 @@ export class MenuPage extends BasePage {
         await this._totalBtn.hover();
     }
 
+    get root(): Locator {
+        return this._root;
+    }
+    
     get promoModal(): PromoModal {
         return this.PromoModal;
     }

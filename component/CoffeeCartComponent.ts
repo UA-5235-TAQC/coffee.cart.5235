@@ -5,28 +5,28 @@ import { getIngredientsFromLocator } from '../utils/domUtils';
  * Represents the coffee card component on the menu page.
  */
 export class CoffeeCartComponent {
-    private root: Locator;
+    private _root: Locator;
     private nameHeader: Locator;
     private priceLabel: Locator;
     private cupClickArea: Locator; // button area for adding coffee (it's not a button element)
     private ingredients: Locator;
 
     constructor(root: Locator) {
-        this.root = root;
+        this._root = root;
 
-        this.nameHeader = this.root.locator('h4');
-        this.priceLabel = this.root.locator('h4 small');
+        this.nameHeader = this._root.locator('h4');
+        this.priceLabel = this._root.locator('h4 small');
 
         // Target the .cup-body as it carries the click event listener
-        this.cupClickArea = this.root.locator('.cup-body');
-        this.ingredients = this.root.locator('.ingredient');
+        this.cupClickArea = this._root.locator('.cup-body');
+        this.ingredients = this._root.locator('.ingredient');
     }
 
     /**
      * Retrieves the clean coffee name, excluding the price tag.
      */
     async getName(): Promise<string> {
-        const aria = await this.root.getAttribute('aria-label');
+        const aria = await this._root.getAttribute('aria-label');
         if (aria) {
             return aria.replace('(Discounted)', '').trim();
         }
@@ -65,6 +65,10 @@ export class CoffeeCartComponent {
         // Clicks on the cup body to invoke the context menu
         await this.cupClickArea.click({button: 'right'});
     }
+    
+    /**
+     * Retrieves the list of ingredients as an array of strings.
+     */
 
     async getIngredients(): Promise<string[]> {
         return getIngredientsFromLocator(this.ingredients);
@@ -79,15 +83,8 @@ export class CoffeeCartComponent {
         return ingredients.some(ing => ing.toLowerCase() === name.toLowerCase());
     }
 
-    /**
-     * Single-click on the coffee title (does not trigger translation)
-     */
-    async clickName(): Promise<void> {
-        await this.nameHeader.click();
-    }
-
     async isVisible(): Promise<boolean> {
-        return this.root.isVisible();
+        return this._root.isVisible();
     }
 
     async priceIsVisible(): Promise<boolean> {
