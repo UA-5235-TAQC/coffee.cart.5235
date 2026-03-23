@@ -20,7 +20,6 @@ export class TestDataBuilder {
         return {
             name: 'Test User',
             email: 'test@example.com',
-            agreeToPromo: true,
         };
     }
 
